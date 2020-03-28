@@ -22,6 +22,7 @@ import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.ActivityAboutBinding;
 import com.example.handyman.utils.DisplayViewUI;
+import com.example.handyman.utils.MyConstants;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,9 +72,8 @@ public class AboutActivity extends AppCompatActivity {
         }
         uid = mFirebaseUser.getUid();
 
-        String getDummy = MainActivity.serviceType;
+        accountType = MainActivity.serviceType;
 
-        Log.i(TAG, "onCreate: " + getDummy);
 
        /* //service type database
         serviceTypeDbRef = FirebaseDatabase.getInstance()
@@ -100,7 +100,7 @@ public class AboutActivity extends AppCompatActivity {
         serviceAccountDbRef = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Services")
-                .child(getDummy)
+                .child(accountType)
                 .child(uid);
 
 
@@ -205,8 +205,10 @@ public class AboutActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             DisplayViewUI.displayToast(this, "Successfully updated");
 
-                            startActivity(new Intent(AboutActivity.this, JobTypesActivity.class)
-                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            Intent addItemIntent = new Intent(AboutActivity.this, JobTypesActivity.class);
+                            addItemIntent.putExtra(MyConstants.ACCOUNT_TYPE,accountType);
+                            addItemIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(addItemIntent);
                             finish();
 
 

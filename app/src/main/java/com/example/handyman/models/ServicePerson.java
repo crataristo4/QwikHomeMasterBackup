@@ -13,21 +13,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ServicePerson extends BaseObservable {
 
-    public float rating;
-    public String userId;
-    public String name, email;
-    public String reason;
-    public double latitude, longitude;
-    public String occupation;
-    public String response;
-    public String location;
-    public String date;
-    public String about, number, accountType;
-    public String image;
-    public String distanceBetween;
-    public String senderPhoto;
-    public String senderName;
-    public String handyManName, handyManPhoto;
+    private float rating;
+    private String userId;
+    private String name;
+    private String email;
+    private String reason;
+    private double price;
+    private String styleItem;
+    private double latitude;
+    private double longitude;
+    private String occupation;
+    private String response;
+    private String location;
+    private String date;
+    private String about;
+    private String number;
+    private String accountType;
+    private String image;
+    private String distanceBetween;
+    private String senderPhoto;
+    private String senderName;
+    private String handyManName;
+    private String handyManPhoto;
 
 
 
@@ -41,13 +48,10 @@ public class ServicePerson extends BaseObservable {
         this.accountType = accountType;
     }
 
-    @BindingAdapter("imageUrl")
-    public static void loadImages(CircleImageView imageView, String imageUrl) {
-        Context context = imageView.getContext();
-        Glide.with(context)
-                .load(imageUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView);
+    public ServicePerson(double price, String styleItem, String image) {
+        this.price = price;
+        this.styleItem = styleItem;
+        this.image = image;
     }
 
     public void setRating(float rating) {
@@ -220,5 +224,32 @@ public class ServicePerson extends BaseObservable {
     @Bindable
     public String getHandyManName() {
         return handyManName;
+    }
+
+    @Bindable
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Bindable
+    public String getStyleItem() {
+        return styleItem;
+    }
+
+    public void setStyleItem(String styleItem) {
+        this.styleItem = styleItem;
+    }
+
+    @BindingAdapter("imageUrl")
+    public static void loadImages(CircleImageView imageView, String imageUrl) {
+        Context context = imageView.getContext();
+        Glide.with(context)
+                .load(imageUrl)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
     }
 }

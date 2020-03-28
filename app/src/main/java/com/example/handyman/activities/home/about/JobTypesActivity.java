@@ -1,6 +1,8 @@
 package com.example.handyman.activities.home.about;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -14,19 +16,27 @@ import androidx.databinding.DataBindingUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
+import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.ActivityJobTypesBinding;
+import com.example.handyman.models.ServicePerson;
 import com.example.handyman.utils.DisplayViewUI;
 import com.example.handyman.utils.MyConstants;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class JobTypesActivity extends AppCompatActivity {
 
@@ -36,7 +46,7 @@ public class JobTypesActivity extends AppCompatActivity {
     private DatabaseReference serviceAccountDbRef, serviceTypeDbRef;
     private StorageReference mStorageReference;
     private Uri uri;
-    private String uid,style;
+    private String uid,style,getImageUri,accountType;
     private double price;
 
     @Override
@@ -60,6 +70,27 @@ public class JobTypesActivity extends AppCompatActivity {
     }
 
     private void intViews() {
+        Intent getAccountType = getIntent();
+        if (getAccountType != null){
+
+            accountType = getAccountType.getStringExtra(MyConstants.ACCOUNT_TYPE);
+
+        }
+        else{
+
+            accountType = MainActivity.serviceType;
+        }
+
+        mStorageReference = FirebaseStorage.getInstance().getReference("photos");
+        serviceAccountDbRef = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Services")
+                .child(accountType)
+                .child(uid);
+
+
+
+        serviceAccountDbRef.keepSynced(true);
         activityJobTypesBinding.txtDes.startAnimation(AnimationUtils.loadAnimation(this,R.anim.blinking_text));
 
         txtPrice = activityJobTypesBinding.textInputLayoutPrice;
@@ -104,7 +135,7 @@ public class JobTypesActivity extends AppCompatActivity {
         } else {
             txtPrice.setErrorEnabled(false);
         }
-        if (price < 0){
+        if (price < 0 || price > 10000){
             txtPrice.setErrorEnabled(true);
             txtPrice.setError("invalid price");
         } else {
@@ -123,7 +154,75 @@ public class JobTypesActivity extends AppCompatActivity {
     }
 
     private void uploadFile() {
+        if (uri != null) {
+            ProgressDialog progressDialog = DisplayViewUI.displayProgress(this, "please wait...");
+            progressDialog.show();
 
+            final File thumb_imageFile = new File(Objects.requireNonNull(uri.getPath()));
+
+            try {
+                Bitmap thumb_imageBitmap = new Compressor(this)
+                        .setMaxHeight(130)
+                        .setMaxWidth(13)
+                        .setQuality(100)
+                        .compressToBitmap(thumb_imageFile);
+
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                thumb_imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //                file path for the image
+            final StorageReference fileReference = mStorageReference.child(uid + "." + uri.getLastPathSegment());
+
+            fileReference.putFile(uri).continueWithTask(task -> {
+                if (!task.isSuccessful()) {
+                    progressDialog.dismiss();
+                    DisplayViewUI.displayToast(JobTypesActivity.this,task.getException().getMessage());
+
+                }
+                return fileReference.getDownloadUrl();
+
+            }).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+
+                    Uri downLoadUri = task.getResult();
+                    assert downLoadUri != null;
+
+                    getImageUri = downLoadUri.toString();
+                    ServicePerson addItems = new ServicePerson(price,style,getImageUri);
+                    String randomUID = serviceAccountDbRef.push().getKey();
+
+                    assert randomUID != null;
+                    serviceAccountDbRef.child(randomUID).setValue(addItems).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+
+                            progressDialog.dismiss();
+                            DisplayViewUI.displayToast(this, "Successfully updated");
+
+                            startActivity(new Intent(JobTypesActivity.this, MainActivity.class)
+                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            finish();
+
+
+                        } else {
+                            progressDialog.dismiss();
+                            DisplayViewUI.displayToast(this, task1.getException().getMessage());
+
+                        }
+
+                    });
+
+                } else {
+                    progressDialog.dismiss();
+                    DisplayViewUI.displayToast(this, task.getException().getMessage());
+
+                }
+
+            });
+        }
     }
 
     @Override
