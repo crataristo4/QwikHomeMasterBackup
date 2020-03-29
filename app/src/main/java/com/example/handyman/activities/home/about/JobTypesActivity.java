@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
@@ -47,7 +49,8 @@ public class JobTypesActivity extends AppCompatActivity {
     private StorageReference mStorageReference;
     private Uri uri;
     private String uid,style,getImageUri,accountType;
-    private double price;
+    private static final String TAG = "JobTypesActivity";
+    private int price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,27 +73,7 @@ public class JobTypesActivity extends AppCompatActivity {
     }
 
     private void intViews() {
-        Intent getAccountType = getIntent();
-        if (getAccountType != null){
 
-            accountType = getAccountType.getStringExtra(MyConstants.ACCOUNT_TYPE);
-
-        }
-        else{
-
-            accountType = MainActivity.serviceType;
-        }
-
-        mStorageReference = FirebaseStorage.getInstance().getReference("photos");
-        serviceAccountDbRef = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("Services")
-                .child(accountType)
-                .child(uid);
-
-
-
-        serviceAccountDbRef.keepSynced(true);
         activityJobTypesBinding.txtDes.startAnimation(AnimationUtils.loadAnimation(this,R.anim.blinking_text));
 
         txtPrice = activityJobTypesBinding.textInputLayoutPrice;
@@ -120,7 +103,7 @@ public class JobTypesActivity extends AppCompatActivity {
 
     private void validateInputs(View v) {
         style = Objects.requireNonNull(txtStyleName.getEditText()).getText().toString();
-        price = Objects.requireNonNull(Double.parseDouble(txtPrice.getEditText().getText().toString()));
+        price = Objects.requireNonNull(Integer.parseInt(String.valueOf(txtPrice.getEditText().getText())));
 
         if (style.trim().isEmpty()) {
             txtStyleName.setErrorEnabled(true);
@@ -129,13 +112,13 @@ public class JobTypesActivity extends AppCompatActivity {
             txtStyleName.setErrorEnabled(false);
         }
 
-        if (txtPrice.getEditText().getText().toString().trim().isEmpty()) {
+        if (TextUtils.isEmpty(txtPrice.getEditText().getText().toString().trim())) {
             txtPrice.setErrorEnabled(true);
             txtPrice.setError("must include a price");
         } else {
             txtPrice.setErrorEnabled(false);
         }
-        if (price < 0 || price > 10000){
+        if (price == 0 || price > 10000) {
             txtPrice.setErrorEnabled(true);
             txtPrice.setError("invalid price");
         } else {
@@ -147,7 +130,9 @@ public class JobTypesActivity extends AppCompatActivity {
 
         }
 
-        if (!style.trim().isEmpty() && uri != null && price > 0) {
+        if (!style.trim().isEmpty() && uri != null
+                && price <= 10000 &&
+                !TextUtils.isEmpty(txtPrice.getEditText().getText().toString().trim())) {
 
             uploadFile();
         }
@@ -275,6 +260,23 @@ public class JobTypesActivity extends AppCompatActivity {
                 .load((Uri) savedInstanceState.getParcelable(MyConstants.IMAGE_URL))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(styleItemPhoto);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        accountType = MainActivity.serviceType;
+        Log.i(TAG, "onStart: " + accountType);
+
+        mStorageReference = FirebaseStorage.getInstance().getReference("photos");
+        serviceAccountDbRef = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Services")
+                .child(accountType)
+                .child(uid);
+        serviceAccountDbRef.keepSynced(true);
 
     }
 }

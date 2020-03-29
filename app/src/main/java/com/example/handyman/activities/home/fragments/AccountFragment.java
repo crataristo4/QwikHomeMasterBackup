@@ -88,11 +88,11 @@ public class AccountFragment extends Fragment {
         txtName.setText(MainActivity.name);
         txtServiceType.setText(MainActivity.serviceType);
 
-        Glide.with(getActivity())
+      /*  Glide.with(getActivity())
                 .load(savedInstanceState.getString(MainActivity.imageUrl))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(accountBinding.imgProfilePhoto);
-
+*/
 
 /*
         serviceAccountDbRef.addValueEventListener(new ValueEventListener() {

@@ -44,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String PREFS = "PREFS";
     private static final String TAG = "MainActivity";
     public static String serviceType, name, imageUrl, about, uid;
-    FirebaseUser firebaseUser;
+    private static FirebaseUser firebaseUser;
     private ActivityMainBinding activityMainBinding;
     private static DatabaseReference serviceTypeDbRef, serviceAccountDbRef;
-    private FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth;
     private static Object mContext;
 
     public static Context getAppContext() {
@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                 .child("Services")
                 .child("ServiceType")
                 .child(uid);
-
         serviceTypeDbRef.keepSynced(true);
 
         serviceTypeDbRef.addValueEventListener(new ValueEventListener() {
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
     private void setUpAppBarConfig() {
         // Passing each menu ID as a set of Ids because each
@@ -178,7 +178,10 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         assert firebaseUser != null;
-        uid = firebaseUser.getUid();
+        if (mAuth.getCurrentUser() == null) {
+            SendUserToLoginActivity();
+            return;
+        }
 
         setUpAppBarConfig();
 
@@ -206,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_logout:
                 mAuth.signOut();
                 startActivity(new Intent(MainActivity.this,SplashScreenActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                 finish();
 
                 break;
@@ -227,17 +230,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        retrieveServiceType();
-
         try {
             assert firebaseUser != null;
 
             if (mAuth.getCurrentUser() == null || !firebaseUser.isEmailVerified()) {
                 SendUserToLoginActivity();
             } else {
+                uid = firebaseUser.getUid();
                 checkDisplayAlertDialog();
-                // retrieveUserDetails();
-
+                retrieveServiceType();
 
             }
 
@@ -246,9 +247,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-    }
 }

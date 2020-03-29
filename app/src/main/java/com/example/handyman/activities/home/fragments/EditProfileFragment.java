@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.handyman.R;
+import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.FragmentEditProfileBinding;
 
 /**
@@ -41,5 +42,8 @@ public class EditProfileFragment extends Fragment {
 
         fragmentEditProfileBinding
                 .fabUploadPhoto.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fadein));
+
+        MainActivity.retrieveUserDetails(fragmentEditProfileBinding.txtUserName,
+                fragmentEditProfileBinding.txtAboutUser, fragmentEditProfileBinding.imgUploadPhoto);
     }
 }

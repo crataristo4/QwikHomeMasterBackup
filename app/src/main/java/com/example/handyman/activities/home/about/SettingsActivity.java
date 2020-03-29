@@ -30,7 +30,6 @@ public class SettingsActivity extends AppCompatActivity
                         R.anim.enter_from_right,
                         R.anim.exit_to_right)
                 .replace(R.id.containerSettings, profileFragment)
-                .addToBackStack(null)
                 .commit();
         setTitle("Settings");
 
@@ -46,6 +45,14 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setTitle("Settings");
 
     }
 }

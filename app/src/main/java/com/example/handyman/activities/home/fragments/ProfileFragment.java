@@ -44,6 +44,7 @@ public class ProfileFragment extends Fragment {
 
         MainActivity.retrieveUserDetails(fragmentProfileBinding.txtName,
                 fragmentProfileBinding.txtAbout, fragmentProfileBinding.imgPhoto);
+        fragmentProfileBinding.txtAccountType.setText(MainActivity.serviceType);
 
         fragmentProfileBinding.mConstrainProfile.setOnClickListener(this::onClick);
 
