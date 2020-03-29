@@ -22,8 +22,8 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgUploadPhoto"
-                    android:layout_width="@dimen/TwoHundredDp"
-                    android:layout_height="@dimen/TwoHundredDp"
+                    android:layout_width="@dimen/OneFiftyDp"
+                    android:layout_height="@dimen/OneFiftyDp"
                     android:layout_marginTop="16dp"
                     android:contentDescription="@string/user_profile"
                     android:src="@drawable/defaultavatar"
@@ -75,8 +75,9 @@
                         android:layout_marginRight="16dp"
                         android:drawableEnd="@drawable/ic_edit_purple"
                         android:drawableRight="@drawable/ic_edit_purple"
+                        android:padding="@dimen/eightDp"
                         android:text="@string/name"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView2"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -125,8 +126,9 @@
                         android:layout_marginRight="16dp"
                         android:drawableEnd="@drawable/ic_edit_purple"
                         android:drawableRight="@drawable/ic_edit_purple"
+                        android:padding="@dimen/eightDp"
                         android:text="@string/about"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgInfo"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -199,8 +201,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginLeft="16dp"
+                        android:padding="@dimen/eightDp"
                         android:text="@string/phone"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         app:layout_constraintStart_toEndOf="@+id/imgPhone"
                         app:layout_constraintTop_toTopOf="parent" />
 

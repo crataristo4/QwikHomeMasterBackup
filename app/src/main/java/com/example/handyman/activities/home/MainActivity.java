@@ -1,6 +1,7 @@
 package com.example.handyman.activities.home;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +19,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.about.AboutActivity;
+import com.example.handyman.activities.home.about.JobTypesActivity;
 import com.example.handyman.activities.home.about.SettingsActivity;
 import com.example.handyman.activities.welcome.SplashScreenActivity;
 import com.example.handyman.databinding.ActivityMainBinding;
@@ -32,26 +37,48 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity {
     public static final String IS_DIALOG_SHOWN = "dialogShown";
     public static final String PREFS = "PREFS";
     private static final String TAG = "MainActivity";
-    public static String serviceType;
+    public static String serviceType, name, imageUrl, about, uid;
     FirebaseUser firebaseUser;
     private ActivityMainBinding activityMainBinding;
-    private DatabaseReference serviceTypeDbRef;
-    private String uid;
+    private static DatabaseReference serviceTypeDbRef, serviceAccountDbRef;
     private FirebaseAuth mAuth;
+    private static Object mContext;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public static Context getAppContext() {
+        return (Context) mContext;
+    }
 
-        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+    public static void retrieveServiceType() {
 
-        mAuth = FirebaseAuth.getInstance();
-        firebaseUser = mAuth.getCurrentUser();
-        setUpAppBarConfig();
+        serviceTypeDbRef = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Services")
+                .child("ServiceType")
+                .child(uid);
+
+        serviceTypeDbRef.keepSynced(true);
+
+        serviceTypeDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                serviceType = (String) dataSnapshot.child("accountType").getValue();
+                Log.i(TAG, "onDataChange: " + serviceType);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // DisplayViewUI.displayToast(MainActivity.this, databaseError.getMessage());
+            }
+        });
 
 
     }
@@ -107,12 +134,72 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public static void retrieveUserDetails(TextView txtName, TextView txtAbout, CircleImageView photo) {
+        serviceAccountDbRef = FirebaseDatabase.getInstance()
+                .getReference().child("Services")
+                .child(serviceType)
+                .child(uid);
+        serviceAccountDbRef.keepSynced(true);
+
+        serviceAccountDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                name = (String) dataSnapshot.child("name").getValue();
+                about = (String) dataSnapshot.child("about").getValue();
+                imageUrl = (String) dataSnapshot.child("image").getValue();
+
+                txtName.setText(name);
+                txtAbout.setText(about);
+                Glide.with(getAppContext())
+                        .load(MainActivity.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(photo);
+
+                Log.i(TAG, "onReceive: " + name + about + imageUrl);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mContext = getApplicationContext();
+
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+        assert firebaseUser != null;
+        uid = firebaseUser.getUid();
+
+        setUpAppBarConfig();
+
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                Intent gotoSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+               /* Bundle bundle = new Bundle();
+                bundle.putString(MyConstants.NAME,name);
+                bundle.putString(MyConstants.ABOUT,about);
+                bundle.putString(MyConstants.IMAGE_URL,imageUrl);
+
+                ProfileFragment profileFragment = new ProfileFragment();
+                profileFragment.setArguments(bundle);
+*/
+
+                startActivity(gotoSettingsIntent);
 
                 return true;
 
@@ -122,6 +209,10 @@ public class MainActivity extends AppCompatActivity {
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                 finish();
 
+                break;
+
+            case R.id.action_addStyles:
+                startActivity(new Intent(MainActivity.this, JobTypesActivity.class));
                 break;
 
             default:
@@ -136,6 +227,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        retrieveServiceType();
+
         try {
             assert firebaseUser != null;
 
@@ -143,7 +236,9 @@ public class MainActivity extends AppCompatActivity {
                 SendUserToLoginActivity();
             } else {
                 checkDisplayAlertDialog();
-                retrieveServiceType();
+                // retrieveUserDetails();
+
+
             }
 
         } catch (Exception e) {
@@ -151,36 +246,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void retrieveServiceType() {
-        uid = firebaseUser.getUid();
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        //service type database
-        serviceTypeDbRef = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("Services")
-                .child("ServiceType")
-                .child(uid);
-
-        serviceTypeDbRef.keepSynced(true);
-        runOnUiThread(() -> {
-
-            serviceTypeDbRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    serviceType = (String) dataSnapshot.child("accountType").getValue();
-                    Log.i(TAG, "onDataChange: " + serviceType);
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // DisplayViewUI.displayToast(MainActivity.this, databaseError.getMessage());
-                }
-            });
-        });
     }
-
-
 }

@@ -14,9 +14,9 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.handyman.activities.home.fragments.ProfileFragment"
+        android:name="com.example.handyman.activities.home.fragments.AccountFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile">
+        tools:layout="@layout/fragment_account">
 
     </fragment>
     <fragment

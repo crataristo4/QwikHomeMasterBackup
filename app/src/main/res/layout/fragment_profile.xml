@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.home.fragments.ProfileFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".activities.home.fragments.ProfileFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mConstrainProfile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sixteenDp">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imgProfilePhoto"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:id="@+id/imgPhoto"
+                android:layout_width="@dimen/eightyDp"
+                android:layout_height="@dimen/eightyDp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:src="@drawable/photoe"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,33 +34,41 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/dummy_name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:layout_marginRight="16dp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imgProfilePhoto"
-                app:layout_constraintTop_toTopOf="@+id/imgProfilePhoto" />
+                app:layout_constraintStart_toEndOf="@+id/imgPhoto"
+                app:layout_constraintTop_toTopOf="@+id/imgPhoto" />
 
-        <TextView
-            android:id="@+id/txtAccountType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dummy_location"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/txtName"
-            app:layout_constraintTop_toBottomOf="@+id/txtName" />
+            <TextView
+                android:id="@+id/txtAbout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/txtName"
+                app:layout_constraintTop_toBottomOf="@+id/txtName" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollView2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtAbout">
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="?android:attr/listDivider" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,109 +76,47 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/txtAboutPerson"
+                    android:id="@+id/txtAccount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:fitsSystemWindows="true"
-                    android:focusableInTouchMode="true"
-                    android:fontFamily="sans-serif"
-                    android:gravity="start"
-                    android:includeFontPadding="true"
-                    android:isScrollContainer="false"
-                    android:lineSpacingExtra="6sp"
+                    android:layout_margin="@dimen/sixteenDp"
+                    android:drawableStart="@drawable/ic_security"
+                    android:drawableLeft="@drawable/ic_security"
+                    android:drawablePadding="@dimen/eightDp"
                     android:padding="@dimen/eightDp"
-                    android:text="@string/profileDetails"
-                    android:textAlignment="viewStart"
-                    android:textSize="18sp" />
+                    android:text="@string/account"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txtNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/sixteenDp"
+                    android:drawableStart="@drawable/ic_notifications"
+                    android:drawableLeft="@drawable/ic_notifications"
+                    android:drawablePadding="@dimen/eightDp"
+                    android:padding="@dimen/eightDp"
+                    android:text="@string/notifications"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txtHelp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/sixteenDp"
+                    android:drawableStart="@drawable/ic_help"
+                    android:drawableLeft="@drawable/ic_help"
+                    android:drawablePadding="@dimen/eightDp"
+                    android:padding="@dimen/eightDp"
+                    android:text="@string/help"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnCall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:backgroundTint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnMsg"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-            app:srcCompat="@drawable/ic_call" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnMsg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            app:backgroundTint="@color/amber"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btnCall"
-            app:layout_constraintTop_toTopOf="@+id/btnCall"
-            app:srcCompat="@drawable/ic_messageblue" />
-
-        <RatingBar
-            android:id="@+id/ratedResults"
-            style="@style/Widget.AppCompat.RatingBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:numStars="5"
-            android:saveEnabled="true"
-            android:stepSize="1.5"
-            android:theme="@style/CustomRatingBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/txtAccountType"
-            app:layout_constraintTop_toBottomOf="@+id/txtAccountType" />
-
-        <TextView
-            android:id="@+id/txtAbout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif"
-            android:text="@string/about"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgProfilePhoto" />
+        </ScrollView>
 
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/txtName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imgProfilePhoto"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:layout_marginTop="8dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toBottomOf="@+id/imgProfilePhoto"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/imgProfilePhoto"
-            app:layout_constraintTop_toBottomOf="@+id/ratedResults"
-            app:layout_constraintVertical_bias="0.0" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</ScrollView>
-
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
