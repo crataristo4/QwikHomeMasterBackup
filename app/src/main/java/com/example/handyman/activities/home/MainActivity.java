@@ -19,6 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.handyman.R;
 import com.example.handyman.activities.home.about.AboutActivity;
+import com.example.handyman.activities.home.about.SettingsActivity;
 import com.example.handyman.activities.welcome.SplashScreenActivity;
 import com.example.handyman.databinding.ActivityMainBinding;
 import com.example.handyman.utils.DisplayViewUI;
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
                 return true;
 
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    DisplayViewUI.displayToast(MainActivity.this, databaseError.getMessage());
+                    // DisplayViewUI.displayToast(MainActivity.this, databaseError.getMessage());
                 }
             });
         });

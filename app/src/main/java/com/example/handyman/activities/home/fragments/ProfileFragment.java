@@ -18,7 +18,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.FragmentProfileBinding;
-import com.example.handyman.utils.DisplayViewUI;
 import com.example.handyman.utils.MyConstants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -114,7 +113,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                DisplayViewUI.displayToast(getActivity(), databaseError.getMessage());
+//                DisplayViewUI.displayToast(getActivity(), databaseError.getMessage());
 
             }
         });

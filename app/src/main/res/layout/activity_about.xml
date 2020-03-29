@@ -13,7 +13,7 @@
             tools:context=".activities.home.about.AboutActivity">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar6"
+                android:id="@+id/toolBarProfile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@color/purple"
@@ -71,7 +71,20 @@
                 android:src="@drawable/defaultavatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar6" />
+                app:layout_constraintTop_toBottomOf="@+id/toolBarProfile" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabUploadPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/purple"
+                app:layout_constraintBottom_toBottomOf="@+id/imgUploadPhoto"
+                app:layout_constraintEnd_toEndOf="@+id/imgUploadPhoto"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/imgUploadPhoto"
+                app:layout_constraintTop_toTopOf="@+id/imgUploadPhoto"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/ic_camera" />
 
             <TextView
                 android:id="@+id/txtRecommend"
@@ -90,18 +103,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgUploadPhoto" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabUploadPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="@color/purple"
-                app:layout_constraintBottom_toBottomOf="@+id/imgUploadPhoto"
-                app:layout_constraintEnd_toEndOf="@+id/imgUploadPhoto"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/imgUploadPhoto"
-                app:layout_constraintTop_toTopOf="@+id/imgUploadPhoto"
-                app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/ic_camera" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

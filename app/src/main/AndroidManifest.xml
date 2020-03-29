@@ -22,13 +22,17 @@
     <application
         android:name=".HandyManApp"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:fullBackupContent="@xml/backup_descriptor">
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".activities.home.about.ProfileActivity"></activity>
+        <activity
+            android:name=".activities.home.about.SettingsActivity"
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.home.serviceTypes.AllDecoratorsActivity"
             android:parentActivityName=".activities.home.MainActivity"
@@ -39,9 +43,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.home.serviceTypes.AllBarbersActivity"
-            android:parentActivityName=".activities.home.MainActivity"
-
-            />
+            android:parentActivityName=".activities.home.MainActivity" />
         <activity
             android:name=".activities.auth.signup.SignUpServicePersonelActivity"
             android:alwaysRetainTaskState="true"
