@@ -119,4 +119,7 @@
     <string name="account">Account</string>
     <string name="notifications">Notifications</string>
     <string name="help">Help</string>
+    <string name="barbers">Barbers</string>
+    <string name="hair_stylist">Hair Stylist</string>
+    <string name="interior_decorators">Interior Decorators</string>
 </resources>
