@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.handyman.R;
 import com.example.handyman.adapters.AllBarbersAdapter;
 import com.example.handyman.databinding.ActivityAllHairStylistBinding;
-import com.example.handyman.models.ServicePerson;
+import com.example.handyman.models.SinglePerson;
 import com.example.handyman.utils.MyConstants;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -47,9 +47,9 @@ public class AllHairStylistActivity extends AppCompatActivity {
         //querying the database base of the time posted
         Query query = allBarbersDbRef.orderByChild("name");
 
-        FirebaseRecyclerOptions<ServicePerson> options =
-                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
-                        ServicePerson.class)
+        FirebaseRecyclerOptions<SinglePerson> options =
+                new FirebaseRecyclerOptions.Builder<SinglePerson>().setQuery(query,
+                        SinglePerson.class)
                         .build();
 
         adapter = new AllBarbersAdapter(options, AllHairStylistActivity.this);

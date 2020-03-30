@@ -273,47 +273,5 @@ public class ServicePerson extends BaseObservable {
     }
 
 
-    public class SinglePerson extends BaseObservable {
-        public String name;
-        public String about;
-        public String imageUrl;
 
-        public SinglePerson(String name, String imageUrl) {
-            this.name = name;
-            this.imageUrl = imageUrl;
-        }
-
-        public SinglePerson(String name, String about, String imageUrl) {
-            this.name = name;
-            this.about = about;
-            this.imageUrl = imageUrl;
-        }
-
-        @Bindable
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @Bindable
-        public String getAbout() {
-            return about;
-        }
-
-        public void setAbout(String about) {
-            this.about = about;
-        }
-
-        @Bindable
-        public String getImageUrl() {
-            return imageUrl;
-        }
-
-        public void setImageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
-        }
-    }
 }

@@ -10,18 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.handyman.R;
+import com.example.handyman.adapters.AllServicesAdapter;
 import com.example.handyman.databinding.FragmentActivitiesBinding;
+import com.example.handyman.models.SinglePerson;
+import com.example.handyman.utils.MyConstants;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ActivitiesFragment extends Fragment {
 
-    FragmentActivitiesBinding fragmentActivitiesBinding;
-    RecyclerView rvBarbers, rvHairStylist, rvInteriorDeco;
+    private FragmentActivitiesBinding fragmentActivitiesBinding;
+    private RecyclerView rvBarbers, rvHairStylist, rvInteriorDeco;
+    private AllServicesAdapter allServicesAdapter, allServicesAdapter1, allServicesAdapter2;
+    private DatabaseReference dbBarbersRef;
 
     public ActivitiesFragment() {
         // Required empty public constructor
@@ -39,5 +49,95 @@ public class ActivitiesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        rvBarbers = fragmentActivitiesBinding.rvBarbers;
+        rvHairStylist = fragmentActivitiesBinding.rvHairStylist;
+        rvInteriorDeco = fragmentActivitiesBinding.rvInteriorDeco;
+
+        rvBarbers.setHasFixedSize(true);
+        rvBarbers.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        rvHairStylist.setHasFixedSize(true);
+        rvHairStylist.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        rvInteriorDeco.setHasFixedSize(true);
+        rvInteriorDeco.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+
+        loadData();
+        loadData1();
+        loadData2();
+    }
+
+    private void loadData1() {
+        dbBarbersRef = FirebaseDatabase.getInstance().getReference()
+                .child(MyConstants.SERVICES)
+                .child(MyConstants.WOMEN_HAIR_STYLIST);
+        dbBarbersRef.keepSynced(true);
+
+        //querying the database base of the time posted
+        Query query = dbBarbersRef.orderByChild("name");
+
+        FirebaseRecyclerOptions<SinglePerson> options =
+                new FirebaseRecyclerOptions.Builder<SinglePerson>().setQuery(query,
+                        SinglePerson.class)
+                        .build();
+
+        allServicesAdapter1 = new AllServicesAdapter(options);
+        rvHairStylist.setAdapter(allServicesAdapter1);
+    }
+
+    private void loadData2() {
+        dbBarbersRef = FirebaseDatabase.getInstance().getReference()
+                .child(MyConstants.SERVICES)
+                .child(MyConstants.INTERIOR_DERCORATOR);
+        dbBarbersRef.keepSynced(true);
+
+        //querying the database base of the time posted
+        Query query = dbBarbersRef.orderByChild("name");
+
+        FirebaseRecyclerOptions<SinglePerson> options =
+                new FirebaseRecyclerOptions.Builder<SinglePerson>().setQuery(query,
+                        SinglePerson.class)
+                        .build();
+
+        allServicesAdapter2 = new AllServicesAdapter(options);
+        rvInteriorDeco.setAdapter(allServicesAdapter2);
+    }
+
+    private void loadData() {
+
+        dbBarbersRef = FirebaseDatabase.getInstance().getReference()
+                .child(MyConstants.SERVICES)
+                .child(MyConstants.BARBERS);
+        dbBarbersRef.keepSynced(true);
+
+        //querying the database base of the time posted
+        Query query = dbBarbersRef.orderByChild("name");
+
+        FirebaseRecyclerOptions<SinglePerson> options =
+                new FirebaseRecyclerOptions.Builder<SinglePerson>().setQuery(query,
+                        SinglePerson.class)
+                        .build();
+
+        allServicesAdapter = new AllServicesAdapter(options);
+        rvBarbers.setAdapter(allServicesAdapter);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        allServicesAdapter.startListening();
+        allServicesAdapter1.startListening();
+        allServicesAdapter2.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        allServicesAdapter.stopListening();
+        allServicesAdapter1.stopListening();
+        allServicesAdapter2.stopListening();
     }
 }

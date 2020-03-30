@@ -6,7 +6,7 @@
 
         <variable
             name="serviceType"
-            type="com.example.handyman.models.ServicePerson" />
+            type="com.example.handyman.models.SinglePerson" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -27,22 +27,27 @@
                 android:id="@+id/imgUserPhoto"
                 android:layout_width="@dimen/imageIconSize"
                 android:layout_height="@dimen/imageIconSize"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
                 android:src="@drawable/defaultavatar"
-                app:imageUrl="@{serviceType.image}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <!--app:imageUrl="@{serviceType.image}"-->
+
 
             <TextView
                 android:id="@+id/txtName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginBottom="16dp"
                 android:ellipsize="end"
                 android:maxLength="20"
