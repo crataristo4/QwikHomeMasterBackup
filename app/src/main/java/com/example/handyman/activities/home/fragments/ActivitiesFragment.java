@@ -140,4 +140,12 @@ public class ActivitiesFragment extends Fragment {
         allServicesAdapter1.stopListening();
         allServicesAdapter2.stopListening();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+        loadData1();
+        loadData2();
+    }
 }

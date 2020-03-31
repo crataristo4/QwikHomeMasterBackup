@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,8 @@ import androidx.fragment.app.FragmentManager;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.FragmentProfileBinding;
+
+import java.util.Objects;
 
 
 public class ProfileFragment extends Fragment {
@@ -45,6 +48,7 @@ public class ProfileFragment extends Fragment {
         MainActivity.retrieveUserDetails(fragmentProfileBinding.txtName,
                 fragmentProfileBinding.txtAbout, fragmentProfileBinding.imgPhoto);
         fragmentProfileBinding.txtAccountType.setText(MainActivity.serviceType);
+        fragmentProfileBinding.imgPhoto.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fadein));
 
         fragmentProfileBinding.mConstrainProfile.setOnClickListener(this::onClick);
 
@@ -75,7 +79,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void onClick(View v) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right,
                         R.anim.exit_to_right,

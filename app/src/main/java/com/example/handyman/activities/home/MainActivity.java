@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static String serviceType, name, imageUrl, about, uid;
     private static FirebaseUser firebaseUser;
     private ActivityMainBinding activityMainBinding;
-    private static DatabaseReference serviceTypeDbRef, serviceAccountDbRef;
+    public static DatabaseReference serviceTypeDbRef, serviceAccountDbRef;
     private static FirebaseAuth mAuth;
     private static Object mContext;
 

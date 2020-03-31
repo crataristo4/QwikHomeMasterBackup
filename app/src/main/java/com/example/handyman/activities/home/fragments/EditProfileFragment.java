@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
@@ -18,16 +17,13 @@ import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.activities.home.bottomsheets.EditItemBottomSheet;
 import com.example.handyman.databinding.FragmentEditProfileBinding;
 import com.example.handyman.utils.MyConstants;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EditProfileFragment extends Fragment {
 
-    FragmentEditProfileBinding fragmentEditProfileBinding;
+    private FragmentEditProfileBinding fragmentEditProfileBinding;
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -48,10 +44,15 @@ public class EditProfileFragment extends Fragment {
 
         fragmentEditProfileBinding
                 .fabUploadPhoto.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fadein));
+        fragmentEditProfileBinding
+                .imgUploadPhoto.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_transition_animation));
+
+
 
         MainActivity.retrieveUserDetails(fragmentEditProfileBinding.txtUserName,
                 fragmentEditProfileBinding.txtAboutUser, fragmentEditProfileBinding.imgUploadPhoto);
 
+        //  fragmentEditProfileBinding.nameLayout.setEnabled(true);
         fragmentEditProfileBinding.nameLayout.setOnClickListener(//open bottom sheet to edit name
                 this::onClick);
 
@@ -64,28 +65,24 @@ public class EditProfileFragment extends Fragment {
     public void onClick(View v) {
         Bundle bundle = new Bundle();
         EditItemBottomSheet editItemBottomSheet = new EditItemBottomSheet();
-       /* bundle.putString(MyConstants.NAME, String.valueOf(fragmentEditProfileBinding.txtUserName));
 
-        EditItemBottomSheet editItemBottomSheet = new EditItemBottomSheet();
-        editItemBottomSheet.setArguments(bundle);
-        editItemBottomSheet.show(getFragmentManager(),MyConstants.NAME);
-*/
         if (v.getId() == R.id.nameLayout) {
-            bundle.putString(MyConstants.NAME, String.valueOf(fragmentEditProfileBinding.txtUserName));
-            editItemBottomSheet.setArguments(bundle);
-            editItemBottomSheet.show(getFragmentManager(), MyConstants.NAME);
+            if (fragmentEditProfileBinding.nameLayout.isEnabled()) {
+                // fragmentEditProfileBinding.nameLayout.setEnabled(false);
+                String getName = String.valueOf(fragmentEditProfileBinding.txtUserName.getText());
+                bundle.putString(MyConstants.NAME, getName);
+                editItemBottomSheet.setArguments(bundle);
+                editItemBottomSheet.show(getFragmentManager(), MyConstants.NAME);
+
+            }
+
 
         } else if (v.getId() == R.id.aboutLayout) {
 
-            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
-            Objects.requireNonNull(bottomSheetDialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-            bottomSheetDialog.setContentView(R.layout.layout_edit_item_bottom_sheet);
-            bottomSheetDialog.getBehavior().setHideable(true);
-            bottomSheetDialog.show();
-
-            /*bundle.putString(MyConstants.ABOUT, String.valueOf(fragmentEditProfileBinding.txtAboutUser));
+            String getAbout = String.valueOf(fragmentEditProfileBinding.txtAboutUser.getText());
+            bundle.putString(MyConstants.ABOUT, getAbout);
             editItemBottomSheet.setArguments(bundle);
-            editItemBottomSheet.show(getFragmentManager(),MyConstants.ABOUT);*/
+            editItemBottomSheet.show(getFragmentManager(), MyConstants.ABOUT);
         }
     }
 }
