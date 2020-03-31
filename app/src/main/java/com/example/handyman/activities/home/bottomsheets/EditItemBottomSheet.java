@@ -2,11 +2,11 @@ package com.example.handyman.activities.home.bottomsheets;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +17,6 @@ import androidx.fragment.app.DialogFragment;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.LayoutEditItemBottomSheetBinding;
-import com.example.handyman.utils.DisplayViewUI;
 import com.example.handyman.utils.MyConstants;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,9 +28,7 @@ import java.util.Objects;
 public class EditItemBottomSheet extends BottomSheetDialogFragment {
     private LayoutEditItemBottomSheetBinding layoutEditItemBottomSheetBinding;
     private TextInputLayout txtInputItem;
-    private ProgressBar loading;
     private Bundle bundle;
-    private boolean isLoading = false;
     private Map<String, Object> updateItem = new HashMap<>();
 
     @Override
@@ -56,7 +53,6 @@ public class EditItemBottomSheet extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         txtInputItem = layoutEditItemBottomSheetBinding.textInputLayout;
-        loading = layoutEditItemBottomSheetBinding.progressBarLoading;
 
         bundle = getArguments();
         if (bundle != null) {
@@ -64,11 +60,12 @@ public class EditItemBottomSheet extends BottomSheetDialogFragment {
             if (Objects.equals(bundle.getString(MyConstants.NAME), MainActivity.name)) {
 
                 layoutEditItemBottomSheetBinding.textInputLayout.setHint("Edit name");
+                Objects.requireNonNull(layoutEditItemBottomSheetBinding.textInputLayout.getEditText()).setSingleLine(true);
                 Objects.requireNonNull(layoutEditItemBottomSheetBinding.textInputLayout
                         .getEditText()).setText(bundle.getString(MyConstants.NAME));
 
             } else if (Objects.equals(bundle.getString(MyConstants.ABOUT), MainActivity.about)) {
-
+                Objects.requireNonNull(layoutEditItemBottomSheetBinding.textInputLayout.getEditText()).setImeOptions(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 layoutEditItemBottomSheetBinding.textInputLayout.setHint("Edit about");
                 Objects.requireNonNull(layoutEditItemBottomSheetBinding.textInputLayout
                         .getEditText()).setText(bundle.getString(MyConstants.ABOUT));
@@ -83,15 +80,10 @@ public class EditItemBottomSheet extends BottomSheetDialogFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (!isLoading) {
-            layoutEditItemBottomSheetBinding.txtCancel.setEnabled(false);
-        } else {
             layoutEditItemBottomSheetBinding.txtCancel.setOnClickListener(v -> {
 
                 dismiss();
             });
-        }
-
 
         layoutEditItemBottomSheetBinding.btnOk.setOnClickListener(this::onOkClicked);
     }
@@ -125,31 +117,11 @@ public class EditItemBottomSheet extends BottomSheetDialogFragment {
 
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
             if (!about.trim().isEmpty()) {
-
                 layoutEditItemBottomSheetBinding.progressBarLoading.setVisibility(View.VISIBLE);
-                if (isLoading)
-                    layoutEditItemBottomSheetBinding.txtCancel.setEnabled(false);
 
                 updateItem.put("about", about);
-                MainActivity.serviceAccountDbRef.updateChildren(updateItem).addOnCompleteListener(task -> {
-
-
-                    if (task.isSuccessful()) {
-
-                        loading.setVisibility(View.INVISIBLE);
-                        layoutEditItemBottomSheetBinding.txtCancel.setEnabled(true);
-                        DisplayViewUI.displayToast(getActivity(), "About Successfully updated");
-                        dismiss();
-
-                    } else {
-
-                        loading.setVisibility(View.INVISIBLE);
-                        isLoading = false;
-                        layoutEditItemBottomSheetBinding.txtCancel.setEnabled(true);
-                        DisplayViewUI.displayToast(getActivity(), task.getException().getMessage());
-                    }
-
-                });
+                MainActivity.serviceAccountDbRef.updateChildren(updateItem);
+                dismiss();
             }
 
         });
@@ -169,29 +141,10 @@ public class EditItemBottomSheet extends BottomSheetDialogFragment {
             if (!name.trim().isEmpty()) {
 
                 layoutEditItemBottomSheetBinding.progressBarLoading.setVisibility(View.VISIBLE);
-                if (isLoading)
-                    layoutEditItemBottomSheetBinding.txtCancel.setEnabled(false);
 
                 updateItem.put("name", name);
-                MainActivity.serviceAccountDbRef.updateChildren(updateItem).addOnCompleteListener(task -> {
-
-
-                    if (task.isSuccessful()) {
-
-                        loading.setVisibility(View.INVISIBLE);
-                        layoutEditItemBottomSheetBinding.txtCancel.setEnabled(true);
-                        DisplayViewUI.displayToast(getActivity(), "Name Successfully updated");
-                        dismiss();
-
-                    } else {
-
-                        loading.setVisibility(View.INVISIBLE);
-                        isLoading = false;
-                        layoutEditItemBottomSheetBinding.txtCancel.setEnabled(true);
-                        DisplayViewUI.displayToast(getActivity(), task.getException().getMessage());
-                    }
-
-                });
+                MainActivity.serviceAccountDbRef.updateChildren(updateItem);
+                dismiss();
             }
 
         });

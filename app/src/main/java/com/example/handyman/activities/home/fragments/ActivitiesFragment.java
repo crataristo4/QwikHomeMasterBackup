@@ -2,6 +2,7 @@ package com.example.handyman.activities.home.fragments;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class ActivitiesFragment extends Fragment {
     private RecyclerView rvBarbers, rvHairStylist, rvInteriorDeco;
     private AllServicesAdapter allServicesAdapter, allServicesAdapter1, allServicesAdapter2;
     private DatabaseReference dbBarbersRef;
+    private static final String TAG = "ActivityFragment";
 
     public ActivitiesFragment() {
         // Required empty public constructor
@@ -49,6 +51,7 @@ public class ActivitiesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated: ");
 
         rvBarbers = fragmentActivitiesBinding.rvBarbers;
         rvHairStylist = fragmentActivitiesBinding.rvHairStylist;
@@ -64,9 +67,15 @@ public class ActivitiesFragment extends Fragment {
         rvInteriorDeco.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         loadData();
         loadData1();
         loadData2();
+
     }
 
     private void loadData1() {
@@ -131,6 +140,9 @@ public class ActivitiesFragment extends Fragment {
         allServicesAdapter.startListening();
         allServicesAdapter1.startListening();
         allServicesAdapter2.startListening();
+
+
+        Log.d(TAG, "onStart: ");
     }
 
     @Override
@@ -144,8 +156,12 @@ public class ActivitiesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadData();
-        loadData1();
-        loadData2();
+        Log.d(TAG, "onResume: ");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
     }
 }

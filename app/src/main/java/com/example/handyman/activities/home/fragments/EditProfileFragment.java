@@ -1,6 +1,9 @@
 package com.example.handyman.activities.home.fragments;
 
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.activities.home.bottomsheets.EditItemBottomSheet;
 import com.example.handyman.databinding.FragmentEditProfileBinding;
+import com.example.handyman.utils.DisplayViewUI;
 import com.example.handyman.utils.MyConstants;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +32,8 @@ import com.example.handyman.utils.MyConstants;
 public class EditProfileFragment extends Fragment {
 
     private FragmentEditProfileBinding fragmentEditProfileBinding;
+    ProfilePhotoEditFragment profilePhotoEditFragment = new ProfilePhotoEditFragment();
+    private Uri uri;
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -47,6 +57,19 @@ public class EditProfileFragment extends Fragment {
         fragmentEditProfileBinding
                 .imgUploadPhoto.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_transition_animation));
 
+        fragmentEditProfileBinding.imgUploadPhoto.setOnClickListener(v -> {
+            FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fadein, R.anim.scale_out)
+                    .replace(R.id.containerSettings, profilePhotoEditFragment)
+                    .addToBackStack(null)
+                    .commit();
+
+            getActivity().setTitle("Profile photo");
+        });
+
+        fragmentEditProfileBinding.fabUploadPhoto.setOnClickListener(v -> openGallery());
+
 
 
         MainActivity.retrieveUserDetails(fragmentEditProfileBinding.txtUserName,
@@ -60,6 +83,12 @@ public class EditProfileFragment extends Fragment {
                 //open bottom sheet to edit about
                 this::onClick);
 
+    }
+
+    private void openGallery() {
+        CropImage.activity()
+                .setAspectRatio(16, 16)
+                .start(getActivity());
     }
 
     public void onClick(View v) {
@@ -83,6 +112,35 @@ public class EditProfileFragment extends Fragment {
             bundle.putString(MyConstants.ABOUT, getAbout);
             editItemBottomSheet.setArguments(bundle);
             editItemBottomSheet.show(getFragmentManager(), MyConstants.ABOUT);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            getActivity();
+            if (resultCode == Activity.RESULT_OK) {
+                assert result != null;
+                uri = result.getUri();
+
+                /*Glide.with(getActivity())
+                        .load(uri)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(profileImage);*/
+
+                // uploadFile();
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                // progressDialog.dismiss();
+                assert result != null;
+                String error = result.getError().getMessage();
+                DisplayViewUI.displayToast(getActivity(), error);
+            }
         }
     }
 }

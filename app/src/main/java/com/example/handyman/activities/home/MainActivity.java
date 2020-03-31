@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -156,8 +157,6 @@ public class MainActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(photo);
 
-                Log.i(TAG, "onReceive: " + name + about + imageUrl);
-
 
             }
 
@@ -168,6 +167,36 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
+    public static void retrieveUserDetails(AppCompatImageView photo) {
+        serviceAccountDbRef = FirebaseDatabase.getInstance()
+                .getReference().child("Services")
+                .child(serviceType)
+                .child(uid);
+        serviceAccountDbRef.keepSynced(true);
+
+        serviceAccountDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                imageUrl = (String) dataSnapshot.child("image").getValue();
+
+                Glide.with(getAppContext())
+                        .load(MainActivity.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(photo);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

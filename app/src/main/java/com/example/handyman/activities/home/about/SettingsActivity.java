@@ -10,10 +10,16 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.handyman.R;
 import com.example.handyman.activities.home.fragments.ProfileFragment;
+import com.example.handyman.activities.home.fragments.ProfilePhotoEditFragment;
 import com.example.handyman.databinding.SettingsActivityBinding;
 
-public class SettingsActivity extends AppCompatActivity
-        implements ProfileFragment.OnFragmentInteractionListener {
+import java.util.Objects;
+
+public class SettingsActivity extends AppCompatActivity implements
+
+        ProfileFragment.OnFragmentInteractionListener,
+        ProfilePhotoEditFragment.OnFragmentInteractionListener {
+
     SettingsActivityBinding settingsActivityBinding;
     ProfileFragment profileFragment = new ProfileFragment();
 
@@ -21,7 +27,7 @@ public class SettingsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settingsActivityBinding = DataBindingUtil.setContentView(this, R.layout.settings_activity);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -29,7 +35,7 @@ public class SettingsActivity extends AppCompatActivity
                         R.anim.exit_to_right,
                         R.anim.enter_from_right,
                         R.anim.exit_to_right)
-                .replace(R.id.containerSettings, profileFragment)
+                .add(R.id.containerSettings, profileFragment)
                 .commit();
         setTitle("Settings");
 
