@@ -70,8 +70,6 @@ public class EditProfileFragment extends Fragment {
 
         fragmentEditProfileBinding.fabUploadPhoto.setOnClickListener(v -> openGallery());
 
-
-
         MainActivity.retrieveUserDetails(fragmentEditProfileBinding.txtUserName,
                 fragmentEditProfileBinding.txtAboutUser, fragmentEditProfileBinding.imgUploadPhoto);
 
