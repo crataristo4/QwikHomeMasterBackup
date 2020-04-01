@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.ActivityJobTypesBinding;
-import com.example.handyman.models.ServicePerson;
+import com.example.handyman.models.StylesItemModel;
 import com.example.handyman.utils.DisplayViewUI;
 import com.example.handyman.utils.MyConstants;
 import com.google.android.material.textfield.TextInputLayout;
@@ -184,7 +184,7 @@ public class JobTypesActivity extends AppCompatActivity {
                     assert downLoadUri != null;
 
                     getImageUri = downLoadUri.toString();
-                    ServicePerson addItems = new ServicePerson(price,style,getImageUri);
+                    StylesItemModel addItems = new StylesItemModel(price, style, getImageUri);
                     String randomUID = serviceTypeDbRef.push().getKey();
 
                     assert randomUID != null;

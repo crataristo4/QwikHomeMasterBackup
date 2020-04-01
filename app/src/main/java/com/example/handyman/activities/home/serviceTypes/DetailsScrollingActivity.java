@@ -1,7 +1,7 @@
 package com.example.handyman.activities.home.serviceTypes;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
 import com.example.handyman.adapters.StylesAdapter;
 import com.example.handyman.databinding.ActivityDetailsScrollingBinding;
-import com.example.handyman.models.ServicePerson;
+import com.example.handyman.models.StylesItemModel;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +28,8 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
     private ActivityDetailsScrollingBinding activityDetailsScrollingBinding;
     private DatabaseReference databaseReference;
-    StylesAdapter adapter;
+    private StylesAdapter adapter;
+    private String name, about, image, userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +43,22 @@ public class DetailsScrollingActivity extends AppCompatActivity {
                 .setAction("Action", null).show());
 
         Intent intent = getIntent();
+        if (intent != null) {
+            String position = intent.getStringExtra("position");
+            assert position != null;
+            name = intent.getStringExtra("name");
+            about = intent.getStringExtra("about");
+            image = intent.getStringExtra("image");
+            userId = intent.getStringExtra("userId");
+        }
 
-        String position = intent.getStringExtra("position");
-        Log.i("onCreate: ", position);
-        String name = intent.getStringExtra("name");
-        String about = intent.getStringExtra("about");
-        String image = intent.getStringExtra("image");
 
-        assert position != null;
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Styles").child(position);
+        Log.i("onCreate: ", userId);
+
+        databaseReference = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Styles")
+                .child(userId);
         databaseReference.keepSynced(true);
 
         activityDetailsScrollingBinding.collapsingToolBar.setTitle(name);
@@ -73,16 +81,16 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
         //querying the database BY NAME
         Query query = databaseReference.orderByChild("price");
-        FirebaseRecyclerOptions<ServicePerson> options =
-                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
-                        ServicePerson.class)
+        FirebaseRecyclerOptions<StylesItemModel> options =
+                new FirebaseRecyclerOptions.Builder<StylesItemModel>().setQuery(query,
+                        StylesItemModel.class)
                         .build();
 
-        if (getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        } else if (getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         }

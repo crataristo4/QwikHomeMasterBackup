@@ -20,15 +20,15 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.handyman.R;
 import com.example.handyman.databinding.LayoutStylesListItemBinding;
-import com.example.handyman.models.ServicePerson;
+import com.example.handyman.models.StylesItemModel;
 import com.example.handyman.utils.DisplayViewUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 
-public class StylesAdapter extends FirebaseRecyclerAdapter<ServicePerson, StylesAdapter.StylesViewHolder> {
+public class StylesAdapter extends FirebaseRecyclerAdapter<StylesItemModel, StylesAdapter.StylesViewHolder> {
 
-    public StylesAdapter(@NonNull FirebaseRecyclerOptions<ServicePerson> options) {
+    public StylesAdapter(@NonNull FirebaseRecyclerOptions<StylesItemModel> options) {
         super(options);
     }
 
@@ -46,16 +46,16 @@ public class StylesAdapter extends FirebaseRecyclerAdapter<ServicePerson, Styles
 
     @Override
     protected void onBindViewHolder(@NonNull StylesViewHolder stylesViewHolder,
-                                    int i, @NonNull ServicePerson servicePerson) {
+                                    int i, @NonNull StylesItemModel itemModel) {
 
-        stylesViewHolder.layoutStylesListItemBinding.setItem(servicePerson);
+        stylesViewHolder.layoutStylesListItemBinding.setItem(itemModel);
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(DisplayViewUI.getRandomDrawableColor());
         requestOptions.error(DisplayViewUI.getRandomDrawableColor());
         requestOptions.centerCrop();
 
         Glide.with(stylesViewHolder.layoutStylesListItemBinding.getRoot().getContext())
-                .load(servicePerson.image)
+                .load(itemModel.image)
                 .apply(requestOptions)
                 .listener(new RequestListener<Drawable>() {
                     @Override

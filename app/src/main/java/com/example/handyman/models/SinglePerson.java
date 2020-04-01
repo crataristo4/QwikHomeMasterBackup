@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 public class SinglePerson extends BaseObservable {
+    public String uid;
     public String name;
     public String about;
     public String image;
@@ -27,6 +28,13 @@ public class SinglePerson extends BaseObservable {
 
     public SinglePerson(String name, String image) {
         this.name = name;
+        this.image = image;
+    }
+
+    public SinglePerson(String uid, String name, String about, String image) {
+        this.uid = uid;
+        this.name = name;
+        this.about = about;
         this.image = image;
     }
 

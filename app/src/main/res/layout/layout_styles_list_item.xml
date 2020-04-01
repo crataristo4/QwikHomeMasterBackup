@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.example.handyman.models.ServicePerson" />
+            type="com.example.handyman.models.StylesItemModel" />
     </data>
 
     <androidx.cardview.widget.CardView

@@ -22,23 +22,23 @@ import com.bumptech.glide.request.target.Target;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.serviceTypes.DetailsScrollingActivity;
 import com.example.handyman.databinding.LayoutListServicePersonsBinding;
-import com.example.handyman.models.SinglePerson;
+import com.example.handyman.models.ServicePerson;
 import com.example.handyman.utils.DisplayViewUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
-public class AllServicesAdapter extends FirebaseRecyclerAdapter<SinglePerson,
+public class AllServicesAdapter extends FirebaseRecyclerAdapter<ServicePerson,
         AllServicesAdapter.AllServiceViewHolder> {
 
 
-    public AllServicesAdapter(@NonNull FirebaseRecyclerOptions<SinglePerson> options) {
+    public AllServicesAdapter(@NonNull FirebaseRecyclerOptions<ServicePerson> options) {
         super(options);
     }
 
     @Override
     protected void onBindViewHolder(@NonNull AllServiceViewHolder allServiceViewHolder,
                                     int i,
-                                    @NonNull SinglePerson singlePerson) {
+                                    @NonNull ServicePerson singlePerson) {
 
         allServiceViewHolder.layoutListServicePersonsBinding.setUser(singlePerson);
 
@@ -76,6 +76,7 @@ public class AllServicesAdapter extends FirebaseRecyclerAdapter<SinglePerson,
             gotoDetailsIntent.putExtra("name", singlePerson.getName());
             gotoDetailsIntent.putExtra("about", singlePerson.getAbout());
             gotoDetailsIntent.putExtra("image", singlePerson.getImage());
+            gotoDetailsIntent.putExtra("userId", singlePerson.getUserId());
 
             allServiceViewHolder.itemView.getContext().startActivity(gotoDetailsIntent);
 

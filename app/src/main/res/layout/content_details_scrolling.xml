@@ -5,8 +5,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="false"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".activities.home.serviceTypes.DetailsScrollingActivity"
         tools:showIn="@layout/activity_details_scrolling">
@@ -72,7 +72,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvStylesItem"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"

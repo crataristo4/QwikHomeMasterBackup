@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.handyman.R;
 import com.example.handyman.adapters.AllServicesAdapter;
 import com.example.handyman.databinding.FragmentActivitiesBinding;
-import com.example.handyman.models.SinglePerson;
+import com.example.handyman.models.ServicePerson;
 import com.example.handyman.utils.MyConstants;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -86,9 +86,9 @@ public class ActivitiesFragment extends Fragment {
         //querying the database base of the time posted
         Query query = dbBarbersRef.orderByChild("name");
 
-        FirebaseRecyclerOptions<SinglePerson> options =
-                new FirebaseRecyclerOptions.Builder<SinglePerson>().setQuery(query,
-                        SinglePerson.class)
+        FirebaseRecyclerOptions<ServicePerson> options =
+                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
+                        ServicePerson.class)
                         .build();
 
         allServicesAdapter1 = new AllServicesAdapter(options);
@@ -104,9 +104,9 @@ public class ActivitiesFragment extends Fragment {
         //querying the database base of the time posted
         Query query = dbBarbersRef.orderByChild("name");
 
-        FirebaseRecyclerOptions<SinglePerson> options =
-                new FirebaseRecyclerOptions.Builder<SinglePerson>().setQuery(query,
-                        SinglePerson.class)
+        FirebaseRecyclerOptions<ServicePerson> options =
+                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
+                        ServicePerson.class)
                         .build();
 
         allServicesAdapter2 = new AllServicesAdapter(options);
@@ -123,9 +123,9 @@ public class ActivitiesFragment extends Fragment {
         //querying the database base of the time posted
         Query query = dbBarbersRef.orderByChild("name");
 
-        FirebaseRecyclerOptions<SinglePerson> options =
-                new FirebaseRecyclerOptions.Builder<SinglePerson>().setQuery(query,
-                        SinglePerson.class)
+        FirebaseRecyclerOptions<ServicePerson> options =
+                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
+                        ServicePerson.class)
                         .build();
 
         allServicesAdapter = new AllServicesAdapter(options);

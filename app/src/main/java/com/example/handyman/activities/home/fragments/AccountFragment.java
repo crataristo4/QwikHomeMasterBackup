@@ -18,7 +18,7 @@ import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.adapters.StylesAdapter;
 import com.example.handyman.databinding.FragmentAccountBinding;
-import com.example.handyman.models.ServicePerson;
+import com.example.handyman.models.StylesItemModel;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -103,9 +103,9 @@ public class AccountFragment extends Fragment {
 
         //querying the database BY NAME
         Query query = databaseReference.orderByChild("price");
-        FirebaseRecyclerOptions<ServicePerson> options =
-                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
-                        ServicePerson.class)
+        FirebaseRecyclerOptions<StylesItemModel> options =
+                new FirebaseRecyclerOptions.Builder<StylesItemModel>().setQuery(query,
+                        StylesItemModel.class)
                         .build();
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
