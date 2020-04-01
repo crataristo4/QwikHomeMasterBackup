@@ -78,6 +78,8 @@ dependencies {
     implementation 'me.relex:circleindicator:1.2.2@aar'
     implementation 'com.hbb20:ccp:2.2.2'
     implementation 'com.google.android.gms:play-services-ads:19.0.1'
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
+    implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
 
 
 }

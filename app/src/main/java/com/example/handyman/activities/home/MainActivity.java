@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
@@ -124,8 +125,7 @@ public class MainActivity extends AppCompatActivity {
         boolean alertShown = pref.getBoolean(IS_DIALOG_SHOWN, false);
 
         if (!alertShown) {
-
-            DisplayViewUI.displayAlertDialogMsg(this,
+            new Handler().postDelayed(() -> DisplayViewUI.displayAlertDialogMsg(this,
                     "Want to be seen by more users?\nPlease edit profile and add more skills",
                     "OK", (dialog, which) -> {
                         if (which == -1) {
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                             gotoAbout.putExtra(MyConstants.ACCOUNT_TYPE, serviceType);
                             startActivity(gotoAbout);
                         }
-                    });
+                    }), 3000);
 
             SharedPreferences.Editor edit = pref.edit();
             edit.putBoolean(IS_DIALOG_SHOWN, true);
@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.main_settings,menu);
         return true;
     }
+
 
     public static void retrieveSingleUserDetails(AppCompatImageView photo) {
         serviceAccountDbRef = FirebaseDatabase.getInstance()
@@ -235,8 +236,6 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-
         NavigationUI.setupWithNavController(activityMainBinding.bottomNavigationView, navController);
 
     }
