@@ -1,45 +1,49 @@
 package com.example.handyman.activities.home.fragments;
 
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
+import com.example.handyman.adapters.StylesAdapter;
 import com.example.handyman.databinding.FragmentAccountBinding;
-import com.example.handyman.utils.MyConstants;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.handyman.models.ServicePerson;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import de.hdodenhof.circleimageview.CircleImageView;
+import com.google.firebase.database.Query;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AccountFragment extends Fragment {
-    private static final String TAG = "AccountFragment";
+   /* private static final String TAG = "AccountFragment";
     String uid, accountType, name, about, imageUrl;
     private FirebaseAuth mAuth;
     private DatabaseReference serviceAccountDbRef, serviceTypeDbRef;
     private FragmentAccountBinding accountBinding;
     private TextView txtName, txtServiceType, txtAbout;
-    private CircleImageView mPhoto;
+    private CircleImageView mPhoto;*/
+
+    private FragmentAccountBinding accountBinding;
+    private DatabaseReference databaseReference;
 
     public AccountFragment() {
         // Required empty public constructor
     }
+
+    private StylesAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -47,7 +51,7 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
         accountBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
 
-        if (savedInstanceState != null) {
+        /*if (savedInstanceState != null) {
             accountBinding.txtAboutPerson.setText(savedInstanceState.getString(MyConstants.ABOUT));
             accountBinding.txtName.setText(savedInstanceState.getString(MyConstants.NAME));
             accountBinding.txtAccountType.setText(savedInstanceState.getString(MyConstants.ACCOUNT_TYPE));
@@ -56,16 +60,15 @@ public class AccountFragment extends Fragment {
                     .load(savedInstanceState.getString(MyConstants.IMAGE_URL))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(accountBinding.imgProfilePhoto);
-        }
+        }*/
         return accountBinding.getRoot();
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
+       /* mAuth = FirebaseAuth.getInstance();
         FirebaseUser mFirebaseUser = mAuth.getCurrentUser();
         if (mFirebaseUser == null) {
             return;
@@ -88,51 +91,57 @@ public class AccountFragment extends Fragment {
         txtName.setText(MainActivity.name);
         txtServiceType.setText(MainActivity.serviceType);
 
-      /*  Glide.with(getActivity())
-                .load(savedInstanceState.getString(MainActivity.imageUrl))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(accountBinding.imgProfilePhoto);
-*/
+    */
 
-/*
-        serviceAccountDbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        RecyclerView rv = accountBinding.rvbb;
+        rv.setHasFixedSize(true);
+        // databaseReference = FirebaseDatabase.getInstance().getReference().child("Styles");
+        databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("Styles")
+                .child(MainActivity.uid);
+        databaseReference.keepSynced(true);
 
-                accountType = (String) dataSnapshot.child("accountType").getValue();
-                name = (String) dataSnapshot.child("name").getValue();
-                imageUrl = (String) dataSnapshot.child("image").getValue();
-                about = (String) dataSnapshot.child("about").getValue();
+        //querying the database BY NAME
+        Query query = databaseReference.orderByChild("price");
+        FirebaseRecyclerOptions<ServicePerson> options =
+                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
+                        ServicePerson.class)
+                        .build();
 
-                txtAbout.setText(about);
-                txtName.setText(name);
-                txtServiceType.setText(accountType);
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-                Glide.with(getActivity())
-                        .load(imageUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(mPhoto);
+        } else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            rv.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-            }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                DisplayViewUI.displayToast(getActivity(), databaseError.getMessage());
 
-            }
-        });
-*/
+        adapter = new StylesAdapter(options);
+        rv.setAdapter(adapter);
+
 
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(MyConstants.ACCOUNT_TYPE, MainActivity.serviceType);
+       /* outState.putString(MyConstants.ACCOUNT_TYPE, MainActivity.serviceType);
         outState.putString(MyConstants.NAME, MainActivity.name);
         outState.putString(MyConstants.ABOUT, MainActivity.about);
-        outState.putString(MyConstants.IMAGE_URL, MainActivity.imageUrl);
+        outState.putString(MyConstants.IMAGE_URL, MainActivity.imageUrl);*/
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
 }

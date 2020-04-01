@@ -64,6 +64,7 @@ public class AllBarbersActivity extends AppCompatActivity {
 
         }
 
+
         DatabaseReference allBarbersDbRef = FirebaseDatabase.getInstance()
                 .getReference()
                 .child(MyConstants.SERVICES)

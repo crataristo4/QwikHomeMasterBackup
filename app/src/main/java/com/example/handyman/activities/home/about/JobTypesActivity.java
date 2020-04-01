@@ -45,7 +45,7 @@ public class JobTypesActivity extends AppCompatActivity {
     private ActivityJobTypesBinding activityJobTypesBinding;
     private TextInputLayout txtStyleName,txtPrice;
     private CircleImageView styleItemPhoto;
-    private DatabaseReference serviceAccountDbRef, serviceTypeDbRef;
+    private DatabaseReference serviceTypeDbRef;
     private StorageReference mStorageReference;
     private Uri uri;
     private String uid,style,getImageUri,accountType;
@@ -67,7 +67,14 @@ public class JobTypesActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+
         activityJobTypesBinding = DataBindingUtil.setContentView(this,R.layout.activity_job_types);
+        mStorageReference = FirebaseStorage.getInstance().getReference("photos");
+        serviceTypeDbRef = FirebaseDatabase.getInstance()
+                .getReference("Styles");
+        serviceTypeDbRef.keepSynced(true);
+
+
         intViews();
 
     }
@@ -178,10 +185,10 @@ public class JobTypesActivity extends AppCompatActivity {
 
                     getImageUri = downLoadUri.toString();
                     ServicePerson addItems = new ServicePerson(price,style,getImageUri);
-                    String randomUID = serviceAccountDbRef.push().getKey();
+                    String randomUID = serviceTypeDbRef.push().getKey();
 
                     assert randomUID != null;
-                    serviceAccountDbRef.child(randomUID).setValue(addItems).addOnCompleteListener(task1 -> {
+                    serviceTypeDbRef.child(uid).child(randomUID).setValue(addItems).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
 
                             progressDialog.dismiss();
@@ -270,13 +277,6 @@ public class JobTypesActivity extends AppCompatActivity {
         accountType = MainActivity.serviceType;
         Log.i(TAG, "onStart: " + accountType);
 
-        mStorageReference = FirebaseStorage.getInstance().getReference("photos");
-        serviceAccountDbRef = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("Services")
-                .child(accountType)
-                .child(uid);
-        serviceAccountDbRef.keepSynced(true);
 
     }
 }

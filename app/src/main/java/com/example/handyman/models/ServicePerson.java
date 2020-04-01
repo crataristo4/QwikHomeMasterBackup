@@ -233,7 +233,7 @@ public class ServicePerson extends BaseObservable {
     }
 
     @Bindable
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
