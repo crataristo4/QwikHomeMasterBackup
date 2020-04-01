@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.animation.AnimationUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -51,11 +50,12 @@ public class DetailsScrollingActivity extends AppCompatActivity {
         String image = intent.getStringExtra("image");
 
         assert position != null;
-        databaseReference = FirebaseDatabase.getInstance().getReference("Services").child(position);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Styles").child(position);
+        databaseReference.keepSynced(true);
 
         activityDetailsScrollingBinding.collapsingToolBar.setTitle(name);
         activityDetailsScrollingBinding.contentDetails.txtAbout.setText(about);
-        activityDetailsScrollingBinding.userImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_in));
+        //activityDetailsScrollingBinding.userImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_in));
 
         Glide.with(this)
                 .load(image)
