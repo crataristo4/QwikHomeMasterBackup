@@ -31,12 +31,15 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activities.home.serviceTypes.DetailsScrollingActivity"
+            android:parentActivityName=".activities.home.MainActivity"
             android:label="@string/title_activity_details_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".activities.home.serviceTypes.DetailsActivity" />
         <activity android:name=".activities.home.about.ProfileActivity" />
         <activity
             android:name=".activities.home.about.SettingsActivity"
+            android:parentActivityName=".activities.home.MainActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation"
             android:label="@string/title_activity_settings" />
         <activity
