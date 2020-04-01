@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="itemPrice"
+            name="item"
             type="com.example.handyman.models.ServicePerson" />
     </data>
 
@@ -43,7 +43,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:text="@{itemPrice.name}"
+                android:text="@{item.name}"
                 android:textColor="@color/purple"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,6 +79,7 @@
                 android:padding="@dimen/sixteenDp"
                 android:textColor="@color/white"
                 android:textSize="12sp"
+                android:text="@{@string/gh(String.valueOf(item.price))}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
