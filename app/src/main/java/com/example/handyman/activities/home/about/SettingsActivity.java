@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.handyman.R;
+import com.example.handyman.activities.home.fragments.EditProfileFragment;
 import com.example.handyman.activities.home.fragments.ProfileFragment;
 import com.example.handyman.activities.home.fragments.ProfilePhotoEditFragment;
 import com.example.handyman.databinding.SettingsActivityBinding;
@@ -18,7 +19,8 @@ import java.util.Objects;
 public class SettingsActivity extends AppCompatActivity implements
 
         ProfileFragment.OnFragmentInteractionListener,
-        ProfilePhotoEditFragment.OnFragmentInteractionListener {
+        ProfilePhotoEditFragment.OnFragmentInteractionListener,
+        EditProfileFragment.OnFragmentInteractionListener {
 
     SettingsActivityBinding settingsActivityBinding;
     ProfileFragment profileFragment = new ProfileFragment();
@@ -37,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity implements
                         R.anim.exit_to_right)
                 .add(R.id.containerSettings, profileFragment)
                 .commit();
-        setTitle("Settings");
+        // setTitle("Settings");
 
 
     }
@@ -58,7 +60,9 @@ public class SettingsActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        setTitle("Settings");
+
 
     }
+
+
 }

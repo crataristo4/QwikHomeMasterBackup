@@ -2,9 +2,11 @@ package com.example.handyman.activities.home.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +34,11 @@ import java.util.Objects;
 public class EditProfileFragment extends Fragment {
 
     private FragmentEditProfileBinding fragmentEditProfileBinding;
-    ProfilePhotoEditFragment profilePhotoEditFragment = new ProfilePhotoEditFragment();
+    private ProfilePhotoEditFragment profilePhotoEditFragment = new ProfilePhotoEditFragment();
     private Uri uri;
+    private long mLastClickTime = 0;
+    private OnFragmentInteractionListener mListener;
+
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -43,6 +48,7 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Profile");
         // Inflate the layout for this fragment
         fragmentEditProfileBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_profile, container, false);
         return fragmentEditProfileBinding.getRoot();
@@ -65,12 +71,15 @@ public class EditProfileFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
 
-            getActivity().setTitle("Profile photo");
+            // getActivity().setTitle("Profile photo");
+
+
+
         });
 
         fragmentEditProfileBinding.fabUploadPhoto.setOnClickListener(v -> openGallery());
 
-        MainActivity.retrieveUserDetails(fragmentEditProfileBinding.txtUserName,
+        MainActivity.retrieveSingleUserDetails(fragmentEditProfileBinding.txtUserName,
                 fragmentEditProfileBinding.txtAboutUser, fragmentEditProfileBinding.imgUploadPhoto);
 
         //  fragmentEditProfileBinding.nameLayout.setEnabled(true);
@@ -92,6 +101,13 @@ public class EditProfileFragment extends Fragment {
     public void onClick(View v) {
         Bundle bundle = new Bundle();
         EditItemBottomSheet editItemBottomSheet = new EditItemBottomSheet();
+
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+            return;
+        }
+
+        mLastClickTime = SystemClock.elapsedRealtime();
+
 
         if (v.getId() == R.id.nameLayout) {
             if (fragmentEditProfileBinding.nameLayout.isEnabled()) {
@@ -140,5 +156,27 @@ public class EditProfileFragment extends Fragment {
                 DisplayViewUI.displayToast(getActivity(), error);
             }
         }
+    }
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
     }
 }

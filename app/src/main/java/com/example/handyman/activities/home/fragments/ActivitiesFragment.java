@@ -43,14 +43,18 @@ public class ActivitiesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        fragmentActivitiesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_activities, container, false);
+        if (fragmentActivitiesBinding == null) {
+            // Inflate the layout for this fragment
+            fragmentActivitiesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_activities, container, false);
+
+        }
+
         return fragmentActivitiesBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        // super.onViewCreated(view, savedInstanceState);
         Log.d(TAG, "onViewCreated: ");
 
         rvBarbers = fragmentActivitiesBinding.rvBarbers;
@@ -66,17 +70,12 @@ public class ActivitiesFragment extends Fragment {
         rvInteriorDeco.setHasFixedSize(true);
         rvInteriorDeco.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         loadData();
         loadData1();
         loadData2();
 
     }
+
 
     private void loadData1() {
         dbBarbersRef = FirebaseDatabase.getInstance().getReference()
@@ -145,9 +144,11 @@ public class ActivitiesFragment extends Fragment {
         Log.d(TAG, "onStart: ");
     }
 
+
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop: ");
         allServicesAdapter.stopListening();
         allServicesAdapter1.stopListening();
         allServicesAdapter2.stopListening();
@@ -156,12 +157,18 @@ public class ActivitiesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         Log.d(TAG, "onResume: ");
+
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy: ");
+
+
     }
+
+
 }

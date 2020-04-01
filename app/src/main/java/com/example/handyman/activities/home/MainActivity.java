@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     public static DatabaseReference serviceTypeDbRef, serviceAccountDbRef;
     private static FirebaseAuth mAuth;
     private static Object mContext;
+    private long mLastClickTime = 0;
 
     public static Context getAppContext() {
         return (Context) mContext;
@@ -83,16 +86,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static void retrieveSingleUserDetails(TextView txtName, TextView txtAbout, CircleImageView photo) {
+        serviceAccountDbRef = FirebaseDatabase.getInstance()
+                .getReference().child("Services")
+                .child(serviceType)
+                .child(uid);
+        serviceAccountDbRef.keepSynced(true);
 
-    private void setUpAppBarConfig() {
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_activities, R.id.navigation_home, R.id.navigation_profile)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(activityMainBinding.bottomNavigationView, navController);
+        serviceAccountDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                name = (String) dataSnapshot.child("name").getValue();
+                about = (String) dataSnapshot.child("about").getValue();
+                imageUrl = (String) dataSnapshot.child("image").getValue();
+
+                txtName.setText(name);
+                txtAbout.setText(about);
+                Glide.with(getAppContext())
+                        .load(MainActivity.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(photo);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -135,11 +158,40 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public static void retrieveUserDetails(TextView txtName, TextView txtAbout, CircleImageView photo) {
+    public static void retrieveSingleUserDetails(AppCompatImageView photo) {
         serviceAccountDbRef = FirebaseDatabase.getInstance()
                 .getReference().child("Services")
                 .child(serviceType)
                 .child(uid);
+        serviceAccountDbRef.keepSynced(true);
+
+        serviceAccountDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                imageUrl = (String) dataSnapshot.child("image").getValue();
+
+                Glide.with(getAppContext())
+                        .load(MainActivity.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(photo);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public static void retrieveSingleUserDetails(String position, TextView txtName, TextView txtAbout, ImageView photo) {
+
+        serviceAccountDbRef = FirebaseDatabase.getInstance()
+                .getReference().child("Services")
+                .child(serviceType)
+                .child(position);
         serviceAccountDbRef.keepSynced(true);
 
         serviceAccountDbRef.addValueEventListener(new ValueEventListener() {
@@ -166,34 +218,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
+    private void setUpAppBarConfig() {
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+            return;
+        }
 
-    public static void retrieveUserDetails(AppCompatImageView photo) {
-        serviceAccountDbRef = FirebaseDatabase.getInstance()
-                .getReference().child("Services")
-                .child(serviceType)
-                .child(uid);
-        serviceAccountDbRef.keepSynced(true);
+        mLastClickTime = SystemClock.elapsedRealtime();
 
-        serviceAccountDbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_activities, R.id.navigation_home, R.id.navigation_profile)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-                imageUrl = (String) dataSnapshot.child("image").getValue();
 
-                Glide.with(getAppContext())
-                        .load(MainActivity.imageUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(photo);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        NavigationUI.setupWithNavController(activityMainBinding.bottomNavigationView, navController);
 
     }
 

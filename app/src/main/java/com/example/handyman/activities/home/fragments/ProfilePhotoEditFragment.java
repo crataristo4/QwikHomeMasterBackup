@@ -18,6 +18,8 @@ import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.FragmentProfilePhotoEditBinding;
 
+import java.util.Objects;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -35,6 +37,7 @@ public class ProfilePhotoEditFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Objects.requireNonNull(getActivity()).setTitle("Profile photo");
         // Inflate the layout for this fragment
         fragmentProfilePhotoEditBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_photo_edit, container, false);
         return fragmentProfilePhotoEditBinding.getRoot();
@@ -46,7 +49,7 @@ public class ProfilePhotoEditFragment extends Fragment {
 
         fragmentProfilePhotoEditBinding.imgEditPhoto.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.scale_in));
 
-        MainActivity.retrieveUserDetails(fragmentProfilePhotoEditBinding.imgEditPhoto);
+        MainActivity.retrieveSingleUserDetails(fragmentProfilePhotoEditBinding.imgEditPhoto);
 
 
     }
@@ -71,5 +74,6 @@ public class ProfilePhotoEditFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
 
 }

@@ -24,7 +24,7 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding fragmentProfileBinding;
-    EditProfileFragment editProfileFragment = new EditProfileFragment();
+    private EditProfileFragment editProfileFragment = new EditProfileFragment();
 
     private OnFragmentInteractionListener mListener;
 
@@ -36,6 +36,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Settings");
         // Inflate the layout for this fragment
         fragmentProfileBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         return fragmentProfileBinding.getRoot();
@@ -45,7 +46,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        MainActivity.retrieveUserDetails(fragmentProfileBinding.txtName,
+        MainActivity.retrieveSingleUserDetails(fragmentProfileBinding.txtName,
                 fragmentProfileBinding.txtAbout, fragmentProfileBinding.imgPhoto);
         fragmentProfileBinding.txtAccountType.setText(MainActivity.serviceType);
         fragmentProfileBinding.imgPhoto.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fadein));
@@ -58,6 +59,7 @@ public class ProfileFragment extends Fragment {
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
+
         }
     }
 
@@ -107,4 +109,6 @@ public class ProfileFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

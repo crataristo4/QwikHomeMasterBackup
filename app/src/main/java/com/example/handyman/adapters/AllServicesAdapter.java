@@ -1,5 +1,6 @@
 package com.example.handyman.adapters;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.handyman.R;
+import com.example.handyman.activities.home.serviceTypes.DetailsScrollingActivity;
 import com.example.handyman.databinding.LayoutListServicePersonsBinding;
 import com.example.handyman.models.SinglePerson;
 import com.example.handyman.utils.DisplayViewUI;
@@ -64,6 +66,20 @@ public class AllServicesAdapter extends FirebaseRecyclerAdapter<SinglePerson,
                 }).transition(DrawableTransitionOptions.withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(allServiceViewHolder.layoutListServicePersonsBinding.imgUserPhoto);
+
+        allServiceViewHolder.layoutListServicePersonsBinding.mCardViewItem.setOnClickListener(v -> {
+
+            String position = getRef(i).getKey();
+            Intent gotoDetailsIntent = new Intent(allServiceViewHolder.itemView.getContext(),
+                    DetailsScrollingActivity.class);
+            gotoDetailsIntent.putExtra("position", position);
+            gotoDetailsIntent.putExtra("name", singlePerson.getName());
+            gotoDetailsIntent.putExtra("about", singlePerson.getAbout());
+            gotoDetailsIntent.putExtra("image", singlePerson.getImage());
+
+            allServiceViewHolder.itemView.getContext().startActivity(gotoDetailsIntent);
+
+        });
 
 
     }
