@@ -176,7 +176,7 @@ public class HandymanRegister extends AppCompatActivity {
                                 //thumb file
                                 final File thumb_imageFile = new File(resultUri.getPath());
 
-                                //  compress image file to bitmap surrounding with try catch
+                                //  compress itemImage file to bitmap surrounding with try catch
                                 byte[] thumbBytes = new byte[0];
                                 try {
                                     Bitmap thumb_imageBitmap =
@@ -192,7 +192,7 @@ public class HandymanRegister extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
 
-                                //                file path for the image
+                                //                file path for the itemImage
                                 final StorageReference fileReference =
                                         mStorageReferenceForPhoto.child(CurrentUserid + "." + resultUri.getLastPathSegment());
                                 fileReference.putFile(resultUri).continueWithTask(task13 -> {

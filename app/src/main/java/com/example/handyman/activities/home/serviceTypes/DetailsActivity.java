@@ -26,6 +26,6 @@ public class DetailsActivity extends AppCompatActivity {
         activityDetailsBinding.name.setText(name);
         activityDetailsBinding.about.setText(about);
 
-        //MainActivity.retrieveSingleUserDetails(position,activityDetailsBinding.name,activityDetailsBinding.about,activityDetailsBinding.image);
+        //MainActivity.retrieveSingleUserDetails(position,activityDetailsBinding.name,activityDetailsBinding.about,activityDetailsBinding.itemImage);
     }
 }

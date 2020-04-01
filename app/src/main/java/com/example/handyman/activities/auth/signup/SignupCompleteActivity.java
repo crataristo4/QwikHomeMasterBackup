@@ -120,6 +120,7 @@ public class SignupCompleteActivity extends AppCompatActivity {
                 ServicePerson servicePerson = new ServicePerson(currentUserId, name, email, accountType);
                 Map<String, Object> serviceType = new HashMap<>();
                 serviceType.put("accountType", accountType);
+                serviceType.put("name", name);
 
                 //send email verification to user
                 firebaseUser.sendEmailVerification();

@@ -53,6 +53,7 @@ public class ProfileFragment extends Fragment {
 
         fragmentProfileBinding.mConstrainProfile.setOnClickListener(this::onClick);
 
+        //TODO : UPDATE SERVICE TYPE USER PHOTO ON PICTURE CHANGE
 
     }
 

@@ -73,7 +73,10 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 serviceType = (String) dataSnapshot.child("accountType").getValue();
-                Log.i(TAG, "onDataChange: " + serviceType);
+                name = (String) dataSnapshot.child("name").getValue();
+                imageUrl = (String) dataSnapshot.child("image").getValue();
+
+                Log.i(TAG, "onDataChange: " + serviceType + " " + name + " " + imageUrl);
 
 
             }
@@ -222,6 +225,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static void retrieveSingleUserDetails() {
+
+        serviceAccountDbRef = FirebaseDatabase.getInstance()
+                .getReference().child("Services")
+                .child(serviceType)
+                .child(uid);
+        serviceAccountDbRef.keepSynced(true);
+
+        serviceAccountDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                name = (String) dataSnapshot.child("name").getValue();
+                about = (String) dataSnapshot.child("about").getValue();
+                imageUrl = (String) dataSnapshot.child("image").getValue();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
     private void setUpAppBarConfig() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -258,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
         setUpAppBarConfig();
 
 
+
     }
 
     @Override
@@ -265,15 +297,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_settings:
                 Intent gotoSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
-               /* Bundle bundle = new Bundle();
-                bundle.putString(MyConstants.NAME,name);
-                bundle.putString(MyConstants.ABOUT,about);
-                bundle.putString(MyConstants.IMAGE_URL,imageUrl);
-
-                ProfileFragment profileFragment = new ProfileFragment();
-                profileFragment.setArguments(bundle);
-*/
-
                 startActivity(gotoSettingsIntent);
 
                 return true;
@@ -287,7 +310,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.action_addStyles:
-                startActivity(new Intent(MainActivity.this, JobTypesActivity.class));
+                Intent intent = new Intent(MainActivity.this, JobTypesActivity.class);
+                intent.putExtra("name", name);
+                intent.putExtra("image", imageUrl);
+                intent.putExtra("serviceType", serviceType);
+                startActivity(intent);
                 break;
 
             default:

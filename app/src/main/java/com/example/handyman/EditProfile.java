@@ -212,7 +212,7 @@ public class EditProfile extends AppCompatActivity {
 
             final File thumb_imageFile = new File(uri.getPath());
 
-            //  compress image file to bitmap surrounding with try catch
+            //  compress itemImage file to bitmap surrounding with try catch
             try {
                 Bitmap thumb_imageBitmap = new Compressor(this)
                         .setMaxHeight(130)
@@ -227,7 +227,7 @@ public class EditProfile extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            //                file path for the image
+            //                file path for the itemImage
             final StorageReference fileReference = mStorageReference.child(uid + "." + uri.getLastPathSegment());
             //                path for thumb_imageFile
 //                creates another folder called thumb_images in the root directory which is the profile_images

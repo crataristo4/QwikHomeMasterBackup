@@ -19,71 +19,70 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.handyman.R;
-import com.example.handyman.databinding.LayoutStylesListItemBinding;
+import com.example.handyman.databinding.LayoutActivityItemsBinding;
 import com.example.handyman.models.StylesItemModel;
 import com.example.handyman.utils.DisplayViewUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
+public class ActivityItemAdapter extends FirebaseRecyclerAdapter<StylesItemModel, ActivityItemAdapter.ActivityItemAdapterViewHolder> {
 
-public class StylesAdapter extends FirebaseRecyclerAdapter<StylesItemModel, StylesAdapter.StylesViewHolder> {
 
-    public StylesAdapter(@NonNull FirebaseRecyclerOptions<StylesItemModel> options) {
+    public ActivityItemAdapter(@NonNull FirebaseRecyclerOptions<StylesItemModel> options) {
         super(options);
     }
 
-
-    @NonNull
     @Override
-    public StylesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        LayoutStylesListItemBinding layoutStylesListItemBinding =
-                DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
-                        R.layout.layout_styles_list_item, viewGroup, false);
-
-        return new StylesViewHolder(layoutStylesListItemBinding);
-    }
-
-
-    @Override
-    protected void onBindViewHolder(@NonNull StylesViewHolder stylesViewHolder,
+    protected void onBindViewHolder(@NonNull ActivityItemAdapterViewHolder activityItemAdapterViewHolder,
                                     int i, @NonNull StylesItemModel itemModel) {
 
-        stylesViewHolder.layoutStylesListItemBinding.setItem(itemModel);
+        activityItemAdapterViewHolder.activityItemsBinding.setItems(itemModel);
+
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(DisplayViewUI.getRandomDrawableColor());
         requestOptions.error(DisplayViewUI.getRandomDrawableColor());
         requestOptions.centerCrop();
 
-        Glide.with(stylesViewHolder.layoutStylesListItemBinding.getRoot().getContext())
+        Glide.with(activityItemAdapterViewHolder.activityItemsBinding.getRoot().getContext())
                 .load(itemModel.itemImage)
                 .apply(requestOptions)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        stylesViewHolder.layoutStylesListItemBinding.progressBar.setVisibility(View.VISIBLE);
+                        activityItemAdapterViewHolder.activityItemsBinding.progressBar.setVisibility(View.VISIBLE);
 
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        stylesViewHolder.layoutStylesListItemBinding.progressBar.setVisibility(View.INVISIBLE);
+                        activityItemAdapterViewHolder.activityItemsBinding.progressBar.setVisibility(View.INVISIBLE);
                         return false;
                     }
                 }).transition(DrawableTransitionOptions.withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(stylesViewHolder.layoutStylesListItemBinding.imgStylePhoto);
+                .into(activityItemAdapterViewHolder.activityItemsBinding.imgItemPhoto);
 
     }
 
+    @NonNull
+    @Override
+    public ActivityItemAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        LayoutActivityItemsBinding layoutActivityItemsBinding = DataBindingUtil
+                .inflate(LayoutInflater.from(viewGroup.getContext()),
+                        R.layout.layout_activity_items, viewGroup, false);
 
-    class StylesViewHolder extends RecyclerView.ViewHolder {
+        return new ActivityItemAdapterViewHolder(layoutActivityItemsBinding);
 
-        LayoutStylesListItemBinding layoutStylesListItemBinding;
+    }
 
-        StylesViewHolder(@NonNull LayoutStylesListItemBinding layoutStylesListItemBinding) {
-            super(layoutStylesListItemBinding.getRoot());
-            this.layoutStylesListItemBinding = layoutStylesListItemBinding;
+    class ActivityItemAdapterViewHolder extends RecyclerView.ViewHolder {
+
+        LayoutActivityItemsBinding activityItemsBinding;
+
+        ActivityItemAdapterViewHolder(@NonNull LayoutActivityItemsBinding activityItemsBinding) {
+            super(activityItemsBinding.getRoot());
+            this.activityItemsBinding = activityItemsBinding;
         }
     }
 }

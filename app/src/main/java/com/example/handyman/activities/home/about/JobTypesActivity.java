@@ -31,10 +31,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,19 +48,20 @@ import id.zelory.compressor.Compressor;
 public class JobTypesActivity extends AppCompatActivity {
 
     private ActivityJobTypesBinding activityJobTypesBinding;
-    private TextInputLayout txtStyleName,txtPrice;
+    String dateTime;
     private CircleImageView styleItemPhoto;
-    private DatabaseReference serviceTypeDbRef;
+    private TextInputLayout txtStyleName, txtPrice;
     private StorageReference mStorageReference;
     private Uri uri;
-    private String uid,style,getImageUri,accountType;
+    private DatabaseReference serviceTypeDbRef, activityDbRef;
     private static final String TAG = "JobTypesActivity";
     private int price;
+    private String uid, style, getImageUploadUri, accountType, userImage, userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             Objects.requireNonNull(txtStyleName.getEditText()).setText(savedInstanceState.getString(MyConstants.STYLE));
             Objects.requireNonNull(txtPrice.getEditText()).setText(savedInstanceState.getString(MyConstants.PRICE));
             Glide.with(JobTypesActivity.this)
@@ -68,11 +74,13 @@ public class JobTypesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        activityJobTypesBinding = DataBindingUtil.setContentView(this,R.layout.activity_job_types);
+        activityJobTypesBinding = DataBindingUtil.setContentView(this, R.layout.activity_job_types);
         mStorageReference = FirebaseStorage.getInstance().getReference("photos");
         serviceTypeDbRef = FirebaseDatabase.getInstance()
                 .getReference("Styles");
-        serviceTypeDbRef.keepSynced(true);
+
+        activityDbRef = FirebaseDatabase.getInstance()
+                .getReference("Activity");
 
 
         intViews();
@@ -81,7 +89,7 @@ public class JobTypesActivity extends AppCompatActivity {
 
     private void intViews() {
 
-        activityJobTypesBinding.txtDes.startAnimation(AnimationUtils.loadAnimation(this,R.anim.blinking_text));
+        activityJobTypesBinding.txtDes.startAnimation(AnimationUtils.loadAnimation(this, R.anim.blinking_text));
 
         txtPrice = activityJobTypesBinding.textInputLayoutPrice;
         txtStyleName = activityJobTypesBinding.txtInputLayoutStyle;
@@ -100,10 +108,12 @@ public class JobTypesActivity extends AppCompatActivity {
 
         activityJobTypesBinding.btnAdd.setOnClickListener(this::validateInputs);
 
+
     }
 
     private void openGallery() {
         CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(16, 16)
                 .start(JobTypesActivity.this);
     }
@@ -118,7 +128,7 @@ public class JobTypesActivity extends AppCompatActivity {
         } else {
             txtStyleName.setErrorEnabled(false);
         }
-
+//TODO : price input validation is missing, crashes system
         if (TextUtils.isEmpty(txtPrice.getEditText().getText().toString().trim())) {
             txtPrice.setErrorEnabled(true);
             txtPrice.setError("must include a price");
@@ -166,13 +176,13 @@ public class JobTypesActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            //                file path for the image
+            //                file path for the itemImage
             final StorageReference fileReference = mStorageReference.child(uid + "." + uri.getLastPathSegment());
 
             fileReference.putFile(uri).continueWithTask(task -> {
                 if (!task.isSuccessful()) {
                     progressDialog.dismiss();
-                    DisplayViewUI.displayToast(JobTypesActivity.this,task.getException().getMessage());
+                    DisplayViewUI.displayToast(JobTypesActivity.this, task.getException().getMessage());
 
                 }
                 return fileReference.getDownloadUrl();
@@ -183,16 +193,37 @@ public class JobTypesActivity extends AppCompatActivity {
                     Uri downLoadUri = task.getResult();
                     assert downLoadUri != null;
 
-                    getImageUri = downLoadUri.toString();
-                    StylesItemModel addItems = new StylesItemModel(price, style, getImageUri);
+                    getImageUploadUri = downLoadUri.toString();
+
+
+                    try {
+                        Calendar calendar = Calendar.getInstance();
+                        Date today = calendar.getTime();
+                        SimpleDateFormat sfd = new SimpleDateFormat("EEEE dd/MMMM/yyyy", Locale.ENGLISH);
+                        dateTime = sfd.format(today);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    StylesItemModel itemModel = new StylesItemModel(price,
+                            style,
+                            getImageUploadUri,
+                            userImage,
+                            userName,
+                            dateTime,
+                            accountType);
                     String randomUID = serviceTypeDbRef.push().getKey();
 
                     assert randomUID != null;
-                    serviceTypeDbRef.child(uid).child(randomUID).setValue(addItems).addOnCompleteListener(task1 -> {
+                    serviceTypeDbRef.child(uid).child(randomUID).setValue(itemModel).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
 
+                            //create an activity node for viewers
+                            activityDbRef.child(randomUID).setValue(itemModel);
+
                             progressDialog.dismiss();
-                            DisplayViewUI.displayToast(this, "Successfully updated");
+                            DisplayViewUI.displayToast(this, "Successful");
 
                             startActivity(new Intent(JobTypesActivity.this, MainActivity.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -246,15 +277,15 @@ public class JobTypesActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
+        super.onBackPressed();
     }
 
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString(MyConstants.STYLE,style);
-        outState.putString(MyConstants.PRICE,String.valueOf(price));
-       outState.putParcelable(MyConstants.IMAGE_URL,uri);
+        outState.putString(MyConstants.STYLE, style);
+        outState.putString(MyConstants.PRICE, String.valueOf(price));
+        outState.putParcelable(MyConstants.IMAGE_URL, uri);
         super.onSaveInstanceState(outState);
     }
 
@@ -274,9 +305,15 @@ public class JobTypesActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        //get user details
         accountType = MainActivity.serviceType;
-        Log.i(TAG, "onStart: " + accountType);
+        userName = MainActivity.name;
+        userImage = MainActivity.imageUrl;
+
+        Log.i(TAG, "onStart: " + userImage + userName);
 
 
     }
+
+
 }

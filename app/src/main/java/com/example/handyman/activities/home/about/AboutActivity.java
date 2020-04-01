@@ -73,16 +73,13 @@ public class AboutActivity extends AppCompatActivity {
         uid = mFirebaseUser.getUid();
 
         accountType = MainActivity.serviceType;
-
-
-       /* //service type database
+        //service type database
         serviceTypeDbRef = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Services")
                 .child("ServiceType")
-                .child(uid)
-                .child(getDummy);
-
+                .child(uid);
+/*
         serviceTypeDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -154,8 +151,6 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void uploadFile() {
-
-
         if (uri != null) {
             ProgressDialog progressDialog = DisplayViewUI.displayProgress(this, "please wait...");
             progressDialog.show();
@@ -176,7 +171,7 @@ public class AboutActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            //                file path for the image
+            //                file path for the itemImage
             final StorageReference fileReference = mStorageReference.child(uid + "." + uri.getLastPathSegment());
 
             fileReference.putFile(uri).continueWithTask(task -> {
@@ -198,9 +193,14 @@ public class AboutActivity extends AppCompatActivity {
                     updateProfile.put("image", getImageUri);
                     updateProfile.put("about", about);
 
+                    Map<String, Object> updateServiceTypeWithPhoto = new HashMap<>();
+                    updateServiceTypeWithPhoto.put("image", getImageUri);
+
 
                     serviceAccountDbRef.updateChildren(updateProfile).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
+
+                            serviceTypeDbRef.updateChildren(updateServiceTypeWithPhoto);
 
                             progressDialog.dismiss();
                             DisplayViewUI.displayToast(this, "Successfully updated");
@@ -266,7 +266,7 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        activityAboutBinding.textInputLayoutAbout.getEditText()
+        Objects.requireNonNull(activityAboutBinding.textInputLayoutAbout.getEditText())
                 .setText(savedInstanceState.getString(ABOUT));
     }
 

@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.FragmentProfilePhotoEditBinding;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.Objects;
 
@@ -27,6 +28,7 @@ public class ProfilePhotoEditFragment extends Fragment {
 
     FragmentProfilePhotoEditBinding fragmentProfilePhotoEditBinding;
     private OnFragmentInteractionListener mListener;
+    private DatabaseReference serviceTypeDbRef;
 
 
     public ProfilePhotoEditFragment() {
@@ -51,6 +53,13 @@ public class ProfilePhotoEditFragment extends Fragment {
 
         MainActivity.retrieveSingleUserDetails(fragmentProfilePhotoEditBinding.imgEditPhoto);
 
+        /*serviceTypeDbRef = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("Services")
+                .child("ServiceType")
+                .child(uid);*/
+
+        //TODO : UPDATE SERVICE TYPE USER PHOTO ON PICTURE CHANGE
 
     }
 

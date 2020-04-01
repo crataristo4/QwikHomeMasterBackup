@@ -7,24 +7,56 @@ public class StylesItemModel extends BaseObservable {
 
     public int price;
     public String styleItem;
-    public String image;
+    public String itemImage;
     public double rating;
+    public String userPhoto;
+    public String userName;
+    public String timeStamp;
+    public String accountType;
 
 
     public StylesItemModel() {
     }
 
-    public StylesItemModel(int price, String styleItem, String image) {
+    public StylesItemModel(int price, String styleItem, String itemImage) {
         this.price = price;
         this.styleItem = styleItem;
-        this.image = image;
+        this.itemImage = itemImage;
     }
 
-    public StylesItemModel(int price, String styleItem, String image, double rating) {
+    public StylesItemModel(int price, String styleItem, String itemImage, double rating) {
         this.price = price;
         this.styleItem = styleItem;
-        this.image = image;
+        this.itemImage = itemImage;
         this.rating = rating;
+    }
+
+    public StylesItemModel(int price, String styleItem, String itemImage, String userPhoto, String userName, String timeStamp) {
+        this.price = price;
+        this.styleItem = styleItem;
+        this.itemImage = itemImage;
+        this.userPhoto = userPhoto;
+        this.userName = userName;
+        this.timeStamp = timeStamp;
+    }
+
+    public StylesItemModel(int price, String styleItem, String itemImage, String userPhoto, String userName, String timeStamp, String accountType) {
+        this.price = price;
+        this.styleItem = styleItem;
+        this.itemImage = itemImage;
+        this.userPhoto = userPhoto;
+        this.userName = userName;
+        this.timeStamp = timeStamp;
+        this.accountType = accountType;
+    }
+
+    @Bindable
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 
     @Bindable
@@ -46,13 +78,14 @@ public class StylesItemModel extends BaseObservable {
     }
 
     @Bindable
-    public String getImage() {
-        return image;
+    public String getItemImage() {
+        return itemImage;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setItemImage(String itemImage) {
+        this.itemImage = itemImage;
     }
+
 
     @Bindable
     public double getRating() {
@@ -61,5 +94,31 @@ public class StylesItemModel extends BaseObservable {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
+    }
+
+    @Bindable
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    @Bindable
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

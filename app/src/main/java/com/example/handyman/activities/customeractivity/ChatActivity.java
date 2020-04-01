@@ -70,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
         uid = mFirebaseUser.getUid();
 
         //get data from the view holder
-        getHandyManPhoto = getIntent().getStringExtra("photo");//image
+        getHandyManPhoto = getIntent().getStringExtra("photo");//itemImage
         String getAdapterPosition = getIntent().getStringExtra("position");//adapter position of the item
         getHandyManName = getIntent().getStringExtra("name");//name of handyMan
         String getContent = getIntent().getStringExtra("content");//content of the report
