@@ -19,28 +19,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ServicePerson extends BaseObservable {
 
-    private float rating;
-    private String userId;
-    private String name;
-    private String email;
-    private String reason;
-    private double price;
-    private String styleItem;
-    private double latitude;
-    private double longitude;
-    private String occupation;
-    private String response;
-    private String location;
-    private String date;
-    private String about;
-    private String number;
-    private String accountType;
-    private String image;
-    private String distanceBetween;
-    private String senderPhoto;
-    private String senderName;
-    private String handyManName;
-    private String handyManPhoto;
+    public float rating;
+    public String userId;
+    public String name;
+    public String email;
+    public String reason;
+    public int price;
+    public String styleItem;
+    public double latitude;
+    public double longitude;
+    public String occupation;
+    public String response;
+    public String location;
+    public String date;
+    public String about;
+    public String number;
+    public String accountType;
+    public String image;
+    public String distanceBetween;
+    public String senderPhoto;
+    public String senderName;
+    public String handyManName;
+    public String handyManPhoto;
 
 
 
@@ -54,7 +54,7 @@ public class ServicePerson extends BaseObservable {
         this.accountType = accountType;
     }
 
-    public ServicePerson(double price, String styleItem, String image) {
+    public ServicePerson(int price, String styleItem, String image) {
         this.price = price;
         this.styleItem = styleItem;
         this.image = image;
@@ -237,7 +237,7 @@ public class ServicePerson extends BaseObservable {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

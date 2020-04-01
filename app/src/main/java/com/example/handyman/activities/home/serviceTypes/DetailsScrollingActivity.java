@@ -3,9 +3,9 @@ package com.example.handyman.activities.home.serviceTypes;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AnimationUtils;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,22 +17,19 @@ import com.example.handyman.R;
 import com.example.handyman.adapters.StylesAdapter;
 import com.example.handyman.databinding.ActivityDetailsScrollingBinding;
 import com.example.handyman.models.ServicePerson;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class DetailsScrollingActivity extends AppCompatActivity {
 
     private ActivityDetailsScrollingBinding activityDetailsScrollingBinding;
-    private List<ServicePerson> servicePersonList;
     private DatabaseReference databaseReference;
+    StylesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +45,7 @@ public class DetailsScrollingActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String position = intent.getStringExtra("position");
+        Log.i("onCreate: ", position);
         String name = intent.getStringExtra("name");
         String about = intent.getStringExtra("about");
         String image = intent.getStringExtra("image");
@@ -70,10 +68,15 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
     private void loadStyleItems() {
 
-        servicePersonList = new ArrayList<>();
         RecyclerView recyclerView = activityDetailsScrollingBinding.contentDetails.rvStylesItem;
         recyclerView.setHasFixedSize(true);
-        StylesAdapter adapter = new StylesAdapter(this, servicePersonList);
+
+        //querying the database BY NAME
+        Query query = databaseReference.orderByChild("price");
+        FirebaseRecyclerOptions<ServicePerson> options =
+                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
+                        ServicePerson.class)
+                        .build();
 
         if (getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
 
@@ -84,29 +87,22 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
         }
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                    ServicePerson person = ds.getValue(ServicePerson.class);
-                    servicePersonList.add(person);
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        adapter.notifyDataSetChanged();
+        adapter = new StylesAdapter(options);
         recyclerView.setAdapter(adapter);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+
+    }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }
