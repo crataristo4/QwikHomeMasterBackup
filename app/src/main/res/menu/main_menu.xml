@@ -20,5 +20,10 @@
         android:orderInCategory="3"
         android:title="@string/profile" />
 
+    <item
+        android:id="@+id/navigation_request"
+        android:icon="@drawable/ic_request"
+        android:orderInCategory="4"
+        android:title="@string/requests" />
 
 </menu>

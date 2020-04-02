@@ -1,6 +1,7 @@
 package com.example.handyman.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,17 +23,19 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.handyman.R;
+import com.example.handyman.activities.home.serviceTypes.DetailsScrollingActivity;
 import com.example.handyman.databinding.LayoutListItemsBinding;
-import com.example.handyman.models.SinglePerson;
+import com.example.handyman.models.ServicePerson;
 import com.example.handyman.utils.DisplayViewUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
-public class AllBarbersAdapter extends FirebaseRecyclerAdapter<SinglePerson,
+//TODO change class name
+public class AllBarbersAdapter extends FirebaseRecyclerAdapter<ServicePerson,
         AllBarbersAdapter.AllBarbersViewHolder> {
     private Context mContext;
 
-    public AllBarbersAdapter(@NonNull FirebaseRecyclerOptions<SinglePerson> options, Context context) {
+    public AllBarbersAdapter(@NonNull FirebaseRecyclerOptions<ServicePerson> options, Context context) {
         super(options);
         mContext = context;
 
@@ -40,7 +43,7 @@ public class AllBarbersAdapter extends FirebaseRecyclerAdapter<SinglePerson,
 
     @Override
     protected void onBindViewHolder(@NonNull AllBarbersViewHolder allBarbersViewHolder,
-                                    int i, @NonNull SinglePerson singlePerson) {
+                                    int i, @NonNull ServicePerson singlePerson) {
 
         allBarbersViewHolder.cardView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_scale_animation));
         allBarbersViewHolder.listItemsServicesBinding.setServiceType(singlePerson);
@@ -69,6 +72,23 @@ public class AllBarbersAdapter extends FirebaseRecyclerAdapter<SinglePerson,
                 }).transition(DrawableTransitionOptions.withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(allBarbersViewHolder.listItemsServicesBinding.imgUserPhoto);
+
+        //on item click listener
+        allBarbersViewHolder.listItemsServicesBinding.mMaterialCard.setOnClickListener(v -> {
+
+            String position = getRef(i).getKey();
+            Intent gotoDetailsIntent = new Intent(allBarbersViewHolder.itemView.getContext(),
+                    DetailsScrollingActivity.class);
+            gotoDetailsIntent.putExtra("position", position);
+            gotoDetailsIntent.putExtra("name", singlePerson.getName());
+            gotoDetailsIntent.putExtra("about", singlePerson.getAbout());
+            gotoDetailsIntent.putExtra("image", singlePerson.getImage());
+            gotoDetailsIntent.putExtra("userId", singlePerson.getUserId());
+
+            allBarbersViewHolder.listItemsServicesBinding.getRoot().getContext().startActivity(gotoDetailsIntent);
+
+        });
+
 
 
     }

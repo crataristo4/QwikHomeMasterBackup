@@ -96,4 +96,11 @@ public class SinglePerson extends BaseObservable {
         this.image = image;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 }

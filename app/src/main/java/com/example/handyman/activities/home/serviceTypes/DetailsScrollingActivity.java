@@ -3,7 +3,6 @@ package com.example.handyman.activities.home.serviceTypes;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -39,9 +38,6 @@ public class DetailsScrollingActivity extends AppCompatActivity {
         setSupportActionBar(activityDetailsScrollingBinding.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        activityDetailsScrollingBinding.fabCall.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
-
         Intent intent = getIntent();
         if (intent != null) {
             String position = intent.getStringExtra("position");
@@ -52,8 +48,14 @@ public class DetailsScrollingActivity extends AppCompatActivity {
             userId = intent.getStringExtra("userId");
         }
 
+        activityDetailsScrollingBinding.fabCall.setOnClickListener(view -> Snackbar.make(view,
+                "Call ".concat(name),
+                Snackbar.LENGTH_LONG)
+                .setAction("Ok", v -> {
 
-        Log.i("onCreate: ", userId);
+                }).show());
+
+
 
         databaseReference = FirebaseDatabase.getInstance()
                 .getReference()
@@ -85,6 +87,7 @@ public class DetailsScrollingActivity extends AppCompatActivity {
                 new FirebaseRecyclerOptions.Builder<StylesItemModel>().setQuery(query,
                         StylesItemModel.class)
                         .build();
+        adapter = new StylesAdapter(options);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
@@ -95,7 +98,23 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
         }
 
-        adapter = new StylesAdapter(options);
+        //check if the adapter is empty and notify users
+        int numberOfItems = recyclerView.getChildCount();
+
+        if (numberOfItems == 0) {
+
+            activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.
+                    txtStyleLabel.setText(getResources().getString(R.string.noStyles)));
+        } else if (numberOfItems == 1) {
+
+            activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(String.format("%d Style offered", numberOfItems)));
+
+        } else if (numberOfItems > 1) {
+
+            activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.
+                    txtStyleLabel.setText(numberOfItems));
+        }
+
         recyclerView.setAdapter(adapter);
 
     }

@@ -42,4 +42,9 @@
         tools:layout="@layout/fragment_activities">
 
     </fragment>
+    <fragment
+        android:id="@+id/navigation_request"
+        android:name="com.example.handyman.activities.home.fragments.RequestFragment"
+        android:label="Requests"
+        tools:layout="@layout/fragment_request" />
 </navigation>

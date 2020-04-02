@@ -214,4 +214,6 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="styles_offered">Styles Offered</string>
+    <string name="noStyles">No styles offered</string>
+    <string name="requests">Requests</string>
 </resources>

@@ -12,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.handyman.R;
 import com.example.handyman.adapters.AllBarbersAdapter;
 import com.example.handyman.databinding.ActivityAllBarbersBinding;
-import com.example.handyman.models.SinglePerson;
+import com.example.handyman.models.ServicePerson;
 import com.example.handyman.utils.MyConstants;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+//TODO change class name
 public class AllBarbersActivity extends AppCompatActivity {
     private ActivityAllBarbersBinding activityAllBarbersBinding;
     private AllBarbersAdapter adapter;
@@ -77,9 +78,9 @@ public class AllBarbersActivity extends AppCompatActivity {
         //querying the database BY NAME
         Query query = allBarbersDbRef.orderByChild("name");
 
-        FirebaseRecyclerOptions<SinglePerson> options =
-                new FirebaseRecyclerOptions.Builder<SinglePerson>().setQuery(query,
-                        SinglePerson.class)
+        FirebaseRecyclerOptions<ServicePerson> options =
+                new FirebaseRecyclerOptions.Builder<ServicePerson>().setQuery(query,
+                        ServicePerson.class)
                         .build();
 
         //DISPLAY different layout for screen orientation

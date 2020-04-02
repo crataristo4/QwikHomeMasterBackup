@@ -43,14 +43,6 @@
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".activities.home.serviceTypes.AllDecoratorsActivity"
-            android:parentActivityName=".activities.home.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.home.serviceTypes.AllHairStylistActivity"
-            android:parentActivityName=".activities.home.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activities.home.serviceTypes.AllBarbersActivity"
             android:parentActivityName=".activities.home.MainActivity" />
         <activity

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     public static DatabaseReference serviceTypeDbRef, serviceAccountDbRef;
     private static FirebaseAuth mAuth;
     private static Object mContext;
-    private long mLastClickTime = 0;
 
     public static Context getAppContext() {
         return (Context) mContext;
@@ -254,16 +252,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setUpAppBarConfig() {
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-            return;
-        }
-
-        mLastClickTime = SystemClock.elapsedRealtime();
-
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_activities, R.id.navigation_home, R.id.navigation_profile)
+                R.id.navigation_activities, R.id.navigation_home,
+                R.id.navigation_profile, R.id.navigation_request)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
