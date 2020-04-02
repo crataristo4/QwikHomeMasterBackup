@@ -60,6 +60,16 @@ public class DisplayViewUI {
         builder.show();
     }
 
+    static public void displayAlertDialog(Context context, String title, String msg, String btnPos, DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setCancelable(false);
+        if (btnPos != null) builder.setPositiveButton(btnPos, onClickListener);
+        builder.setIcon(R.drawable.ic_gps);
+        builder.show();
+    }
+
     static public void displayAlertDialogMsg(Context context, String msg, String btnPos,  DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(msg);

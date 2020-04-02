@@ -3,6 +3,7 @@ package com.example.handyman.activities.home.serviceTypes;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,6 +68,44 @@ public class DetailsScrollingActivity extends AppCompatActivity {
                 .child("Styles")
                 .child(userId);
         databaseReference.keepSynced(true);
+        //get number of items in database
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    numberOfItems = (int) ds.getChildrenCount();
+
+                }
+
+                //check if the adapter is empty and notify users
+                if (numberOfItems == 0) {
+
+                    activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(getResources().getString(R.string.noStyles));
+                    Log.i("No items: ", " " + numberOfItems);
+
+
+                } else if (numberOfItems == 1) {
+
+                    activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(String.format("%d Style offered", numberOfItems));
+                    Log.i("Item is single: ", " " + numberOfItems);
+
+
+                } else if (numberOfItems > 1) {
+
+                    activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(String.format("%d Styles offered", numberOfItems));
+                    Log.i("More than single: ", " " + numberOfItems);
+
+                }
+                Log.i("onDataChange: ", " " + numberOfItems);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         activityDetailsScrollingBinding.collapsingToolBar.setTitle(name);
         activityDetailsScrollingBinding.contentDetails.txtAbout.setText(about);
@@ -89,37 +128,6 @@ public class DetailsScrollingActivity extends AppCompatActivity {
         //querying the database BY NAME
         Query query = databaseReference.orderByChild("price");
 
-        //get number of items in database
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    numberOfItems = (int) ds.getChildrenCount();
-//check if the adapter is empty and notify users
-                    if (numberOfItems == 0) {
-
-                        activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.
-                                txtStyleLabel.setText(getResources().getString(R.string.noStyles)));
-                    } else if (numberOfItems == 1) {
-
-                        activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(String.format("%d Style offered", numberOfItems)));
-
-                    } else if (numberOfItems > 1) {
-
-                        activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.
-                                txtStyleLabel.setText(String.format("%d Styles offered", numberOfItems)));
-                    }
-
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 
         FirebaseRecyclerOptions<StylesItemModel> options =

@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +39,11 @@ import com.example.handyman.activities.welcome.SplashScreenActivity;
 import com.example.handyman.databinding.ActivityMainBinding;
 import com.example.handyman.utils.DisplayViewUI;
 import com.example.handyman.utils.MyConstants;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,6 +64,23 @@ public class MainActivity extends AppCompatActivity {
     public static DatabaseReference serviceTypeDbRef, serviceAccountDbRef;
     private static FirebaseAuth mAuth;
     private static Object mContext;
+
+    //Step 5
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    //step 8
+    private LocationCallback mLocationCallBack = new LocationCallback() {
+
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+
+            Location lastLocation = locationResult.getLastLocation();
+            //TODO update database with location results
+
+            Log.i("Location: ", "Latitude " + lastLocation.getLatitude());
+            Log.i("Location: ", "longitude " + lastLocation.getLongitude());
+        }
+    };
 
     public static Context getAppContext() {
         return (Context) mContext;
@@ -123,45 +149,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-    private void checkDisplayAlertDialog() {
-        SharedPreferences pref = getSharedPreferences(PREFS, 0);
-        boolean alertShown = pref.getBoolean(IS_DIALOG_SHOWN, false);
-
-        if (!alertShown) {
-            new Handler().postDelayed(() -> DisplayViewUI.displayAlertDialogMsg(this,
-                    "Want to be seen by more users?\nPlease edit profile and add more skills",
-                    "OK", (dialog, which) -> {
-                        if (which == -1) {
-
-                            dialog.dismiss();
-                            Intent gotoAbout = new Intent(MainActivity.this, AboutActivity.class);
-                            gotoAbout.putExtra(MyConstants.ACCOUNT_TYPE, serviceType);
-                            startActivity(gotoAbout);
-                        }
-                    }), 3000);
-
-            SharedPreferences.Editor edit = pref.edit();
-            edit.putBoolean(IS_DIALOG_SHOWN, true);
-            edit.apply();
-        }
-    }
-
-    private void SendUserToLoginActivity() {
-        Intent Login = new Intent(MainActivity.this, SplashScreenActivity.class);
-        startActivity(Login);
-        finish();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-
-        menuInflater.inflate(R.menu.main_settings,menu);
-        return true;
-    }
-
 
     public static void retrieveSingleUserDetails(AppCompatImageView photo) {
         serviceAccountDbRef = FirebaseDatabase.getInstance()
@@ -253,25 +240,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    private void setUpAppBarConfig() {
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_activities, R.id.navigation_home,
-                R.id.navigation_styles, R.id.navigation_request)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(activityMainBinding.bottomNavigationView, navController);
-
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mContext = getApplicationContext();
 
+        mContext = getApplicationContext();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         assert firebaseUser != null;
@@ -280,19 +254,123 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        //initialize step 5
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MyConstants.REQUEST_CODE);
-        }
         setUpAppBarConfig();
-
+        //step 9
+        getLastLocation();
 
 
     }
 
+    //Step 1 CHECK PERMISSION
+    private boolean checkPermission() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    //Step 2 REQUEST PERMISSION IF NOT GRANTED
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION}, MyConstants.REQUEST_CODE);
+
+    }
+
+    //Step 4 check if the location is turned on from the settings
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        assert locationManager != null;
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    //STEP 6 check if permission is granted , next check if gps is enabled.
+    private void getLastLocation() {
+        if (checkPermission()) {
+            if (isLocationEnabled()) {
+                //get the last known location
+                mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+
+                    Location location = task.getResult();
+                    if (location == null) {
+                        //request new location data from step 7 method
+                        requestNewLocationData();
+
+                    } else {
+                        //TODO update user account with location
+
+                        Log.i("Location: ", "Latitude " + location.getLatitude());
+                        Log.i("Location: ", "Longitude " + location.getLongitude());
+                    }
+                });
+            } else {
+
+                DisplayViewUI.displayAlertDialog(MainActivity.this,
+                        "Turn on location",
+                        "Locations are used to allow best search results.Please turn on location to allow best search results",
+                        "ok",
+                        (dialog, which) -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)));
+            }
+        } else {
+            requestPermission();
+        }
+    }
+
+    //STEP 7 REQUEST NEW LOCATION DATA IF THE LOCATION IS NULL
+    private void requestNewLocationData() {
+
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(0);
+        locationRequest.setFastestInterval(0);
+        locationRequest.setNumUpdates(1);
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallBack, Looper.myLooper());
+
+    }
+
+    private void checkDisplayAlertDialog() {
+        SharedPreferences pref = getSharedPreferences(PREFS, 0);
+        boolean alertShown = pref.getBoolean(IS_DIALOG_SHOWN, false);
+
+        if (!alertShown) {
+            new Handler().postDelayed(() -> DisplayViewUI.displayAlertDialogMsg(this,
+                    "Want to be seen by more users?\nPlease edit profile and add more skills",
+                    "OK", (dialog, which) -> {
+                        if (which == -1) {
+
+                            dialog.dismiss();
+                            Intent gotoAbout = new Intent(MainActivity.this, AboutActivity.class);
+                            gotoAbout.putExtra(MyConstants.ACCOUNT_TYPE, serviceType);
+                            startActivity(gotoAbout);
+                        }
+                    }), 3000);
+
+            SharedPreferences.Editor edit = pref.edit();
+            edit.putBoolean(IS_DIALOG_SHOWN, true);
+            edit.apply();
+        }
+    }
+
+    private void SendUserToLoginActivity() {
+        Intent Login = new Intent(MainActivity.this, SplashScreenActivity.class);
+        startActivity(Login);
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+
+        menuInflater.inflate(R.menu.main_settings, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent gotoSettingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(gotoSettingsIntent);
@@ -301,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.action_logout:
                 mAuth.signOut();
-                startActivity(new Intent(MainActivity.this,SplashScreenActivity.class)
+                startActivity(new Intent(MainActivity.this, SplashScreenActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
                 finish();
 
@@ -321,6 +399,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void setUpAppBarConfig() {
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_activities, R.id.navigation_home,
+                R.id.navigation_styles, R.id.navigation_request)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(activityMainBinding.bottomNavigationView, navController);
+
+    }
+
+
+    //Step 3
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == MyConstants.REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //permission granted, get location update , called from step 6
+                getLastLocation();
+            }
+        }
     }
 
     @Override
@@ -344,15 +447,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == MyConstants.REQUEST_CODE) {
-            if (grantResults.length > grantResults[0]) {
-                //tODO
-            }
-        }
+    protected void onResume() {
+        super.onResume();
+       /* if (checkPermission()){
+            getLastLocation();
+        }*/
     }
 }

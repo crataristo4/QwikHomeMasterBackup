@@ -43,7 +43,6 @@ public class ServicePerson extends BaseObservable {
     public String handyManPhoto;
 
 
-
     public ServicePerson() {
     }
 
