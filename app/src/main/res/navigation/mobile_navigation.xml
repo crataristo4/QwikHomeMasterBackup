@@ -21,7 +21,7 @@
             app:popUpTo="@id/navigation_home" />
         <action
             android:id="@+id/action_navigation_home_to_navigation_profile"
-            app:destination="@id/navigation_profile"
+            app:destination="@id/navigation_styles"
             app:enterAnim="@anim/enter_from_right"
             app:exitAnim="@anim/exit_to_right"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -29,9 +29,9 @@
             app:popUpTo="@id/navigation_activities" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_profile"
+        android:id="@+id/navigation_styles"
         android:name="com.example.handyman.activities.home.fragments.AccountFragment"
-        android:label="Profile"
+        android:label="Your styles"
         tools:layout="@layout/fragment_account">
 
     </fragment>

@@ -1,9 +1,11 @@
 package com.example.handyman.activities.home;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -254,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
     private void setUpAppBarConfig() {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_activities, R.id.navigation_home,
-                R.id.navigation_profile, R.id.navigation_request)
+                R.id.navigation_styles, R.id.navigation_request)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -277,6 +280,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MyConstants.REQUEST_CODE);
+        }
         setUpAppBarConfig();
 
 
@@ -338,4 +345,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == MyConstants.REQUEST_CODE) {
+            if (grantResults.length > grantResults[0]) {
+                //tODO
+            }
+        }
+    }
 }

@@ -13,4 +13,5 @@ public final class MyConstants {
     public static String IMAGE_URL = "imageUrl";
     public static String STYLE = "style";
     public static String PRICE = "price";
+    public static int REQUEST_CODE = 100;
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,9 +18,12 @@ import com.example.handyman.databinding.ActivityDetailsScrollingBinding;
 import com.example.handyman.models.StylesItemModel;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -29,6 +33,7 @@ public class DetailsScrollingActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private StylesAdapter adapter;
     private String name, about, image, userId;
+    int numberOfItems = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,40 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
         //querying the database BY NAME
         Query query = databaseReference.orderByChild("price");
+
+        //get number of items in database
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    numberOfItems = (int) ds.getChildrenCount();
+//check if the adapter is empty and notify users
+                    if (numberOfItems == 0) {
+
+                        activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.
+                                txtStyleLabel.setText(getResources().getString(R.string.noStyles)));
+                    } else if (numberOfItems == 1) {
+
+                        activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(String.format("%d Style offered", numberOfItems)));
+
+                    } else if (numberOfItems > 1) {
+
+                        activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.
+                                txtStyleLabel.setText(String.format("%d Styles offered", numberOfItems)));
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         FirebaseRecyclerOptions<StylesItemModel> options =
                 new FirebaseRecyclerOptions.Builder<StylesItemModel>().setQuery(query,
                         StylesItemModel.class)
@@ -98,22 +137,6 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
         }
 
-        //check if the adapter is empty and notify users
-        int numberOfItems = recyclerView.getChildCount();
-
-        if (numberOfItems == 0) {
-
-            activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.
-                    txtStyleLabel.setText(getResources().getString(R.string.noStyles)));
-        } else if (numberOfItems == 1) {
-
-            activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(String.format("%d Style offered", numberOfItems)));
-
-        } else if (numberOfItems > 1) {
-
-            activityDetailsScrollingBinding.contentDetails.txtStyleLabel.post(() -> activityDetailsScrollingBinding.contentDetails.
-                    txtStyleLabel.setText(numberOfItems));
-        }
 
         recyclerView.setAdapter(adapter);
 

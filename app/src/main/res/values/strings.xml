@@ -216,4 +216,5 @@
     <string name="styles_offered">Styles Offered</string>
     <string name="noStyles">No styles offered</string>
     <string name="requests">Requests</string>
+    <string name="styles">Styles</string>
 </resources>
