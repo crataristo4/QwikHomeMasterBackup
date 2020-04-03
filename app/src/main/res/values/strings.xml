@@ -72,6 +72,7 @@
         <item>Interior Decorators</item>
 
     </string-array>
+    <string name="adUnit" templateMergeStrategy="preserve" translatable="false">ca-app-pub-7358181102198543~9661993486</string>
     <string name="title_activity_handy_man_maps">Map</string>
     <string name="mchin">Getting your mechanic....</string>
 

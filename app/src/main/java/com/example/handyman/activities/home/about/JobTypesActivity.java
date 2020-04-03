@@ -22,6 +22,7 @@ import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.databinding.ActivityJobTypesBinding;
 import com.example.handyman.models.StylesItemModel;
 import com.example.handyman.utils.DisplayViewUI;
+import com.example.handyman.utils.GetDateTime;
 import com.example.handyman.utils.MyConstants;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -200,7 +201,7 @@ public class JobTypesActivity extends AppCompatActivity {
                         Calendar calendar = Calendar.getInstance();
                         Date today = calendar.getTime();
                         SimpleDateFormat sfd = new SimpleDateFormat("EEEE dd/MMMM/yyyy", Locale.ENGLISH);
-                        dateTime = sfd.format(today);
+                        dateTime = GetDateTime.getFormattedDate(today);
 
                     } catch (Exception e) {
                         e.printStackTrace();

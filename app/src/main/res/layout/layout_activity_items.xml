@@ -74,22 +74,6 @@
                 app:srcCompat="@drawable/bottom_shadow" />
 
             <TextView
-                android:id="@+id/txtPubDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/round_white"
-                android:drawableStart="@drawable/ic_date"
-                android:drawableLeft="@drawable/ic_date"
-                android:drawablePadding="4dp"
-                android:padding="4dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/txtStyleName"
-                app:layout_constraintEnd_toEndOf="@+id/imgShadow"
-                app:layout_constraintStart_toEndOf="@+id/progressBar"
-                app:layout_constraintTop_toTopOf="@+id/txtStyleName" />
-
-            <TextView
                 android:id="@+id/txtStyleName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -97,14 +81,17 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{items.styleItem}"
                 android:textColor="@android:color/white"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/imgItemPhoto"
-                app:layout_constraintEnd_toStartOf="@+id/txtPubDate"
+                app:layout_constraintEnd_toEndOf="@+id/imgShadow"
                 app:layout_constraintStart_toStartOf="@+id/imgShadow"
-                app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+                app:layout_constraintTop_toBottomOf="@+id/progressBar"
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/txtName"
@@ -129,8 +116,15 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:layout_marginEnd="8dp"
+                android:background="@drawable/round_white"
                 android:layout_marginRight="8dp"
-                android:text="@{String.valueOf(items.timeStamp)}"
+                android:drawableStart="@drawable/ic_date"
+                android:drawableLeft="@drawable/ic_date"
+                android:drawablePadding="4dp"
+                android:padding="4dp"
+                android:text="@{items.timeStamp}"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -166,8 +160,6 @@
                 android:id="@+id/txtPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
@@ -178,7 +170,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txtPubDate"
+                app:layout_constraintStart_toEndOf="@+id/progressBar"
                 app:layout_constraintTop_toTopOf="@+id/imgItemPhoto" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

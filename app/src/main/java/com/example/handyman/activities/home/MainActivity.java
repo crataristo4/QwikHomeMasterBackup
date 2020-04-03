@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -39,6 +42,9 @@ import com.example.handyman.activities.welcome.SplashScreenActivity;
 import com.example.handyman.databinding.ActivityMainBinding;
 import com.example.handyman.utils.DisplayViewUI;
 import com.example.handyman.utils.MyConstants;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -52,6 +58,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
     public static DatabaseReference serviceTypeDbRef, serviceAccountDbRef;
     private static FirebaseAuth mAuth;
     private static Object mContext;
+    //adds
+    private InterstitialAd interstitialAd;
+
+    private double latitude, longitude;
 
     //Step 5
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -77,8 +91,11 @@ public class MainActivity extends AppCompatActivity {
             Location lastLocation = locationResult.getLastLocation();
             //TODO update database with location results
 
-            Log.i("Location: ", "Latitude " + lastLocation.getLatitude());
-            Log.i("Location: ", "longitude " + lastLocation.getLongitude());
+            Log.i("Locationx: ", "Latitude " + lastLocation.getLatitude());
+            Log.i("Locationx: ", "longitude " + lastLocation.getLongitude());
+
+
+
         }
     };
 
@@ -261,7 +278,31 @@ public class MainActivity extends AppCompatActivity {
         //step 9
         getLastLocation();
 
+        //load add
+        loadAdds();
 
+
+    }
+
+    private void loadAdds() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd = new InterstitialAd(MainActivity.this);
+        interstitialAd.setAdUnitId(getString(R.string.adUnit));
+        interstitialAd.loadAd(adRequest);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                displayInterstitial();
+            }
+        });
+    }
+
+    private void displayInterstitial() {
+
+        if (interstitialAd.isLoaded()) {
+            interstitialAd.show();
+        }
     }
 
     //Step 1 CHECK PERMISSION
@@ -272,9 +313,10 @@ public class MainActivity extends AppCompatActivity {
 
     //Step 2 REQUEST PERMISSION IF NOT GRANTED
     private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION}, MyConstants.REQUEST_CODE);
-
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION}, MyConstants.REQUEST_CODE);
+        }
     }
 
     //Step 4 check if the location is turned on from the settings
@@ -298,10 +340,31 @@ public class MainActivity extends AppCompatActivity {
                         requestNewLocationData();
 
                     } else {
-                        //TODO update user account with location
+                        //TODO update user account with location ON UI THREAD
 
                         Log.i("Location: ", "Latitude " + location.getLatitude());
                         Log.i("Location: ", "Longitude " + location.getLongitude());
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+
+                                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                                try {
+                                    List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                                    if (addressList.size() > 0) {
+                                        Log.i(TAG, "getLastLocation: " + addressList.get(0).getLocality());
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+
                     }
                 });
             } else {
@@ -346,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
                             gotoAbout.putExtra(MyConstants.ACCOUNT_TYPE, serviceType);
                             startActivity(gotoAbout);
                         }
-                    }), 3000);
+                    }), 15000);
 
             SharedPreferences.Editor edit = pref.edit();
             edit.putBoolean(IS_DIALOG_SHOWN, true);

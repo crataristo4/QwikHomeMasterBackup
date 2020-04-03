@@ -89,7 +89,7 @@ public class ActivitiesFragment extends Fragment {
         dbRef.keepSynced(true);
 
         //querying the database base of the time posted
-        Query query = dbRef.orderByChild("timeStamp");
+        Query query = dbRef.orderByValue();
 
         FirebaseRecyclerOptions<StylesItemModel> options =
                 new FirebaseRecyclerOptions.Builder<StylesItemModel>().setQuery(query,

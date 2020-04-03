@@ -2,10 +2,11 @@ package com.example.handyman.activities.home.serviceTypes;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,7 +36,9 @@ public class DetailsScrollingActivity extends AppCompatActivity {
     private StylesAdapter adapter;
     private String name, about, image, userId;
     int numberOfItems = 0;
+    private static final String TAG = "DetailsActivity";
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +65,6 @@ public class DetailsScrollingActivity extends AppCompatActivity {
                 }).show());
 
 
-
         databaseReference = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Styles")
@@ -81,22 +83,14 @@ public class DetailsScrollingActivity extends AppCompatActivity {
                 if (numberOfItems == 0) {
 
                     activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(getResources().getString(R.string.noStyles));
-                    Log.i("No items: ", " " + numberOfItems);
 
 
-                } else if (numberOfItems == 1) {
+                } else {
 
-                    activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(String.format("%d Style offered", numberOfItems));
-                    Log.i("Item is single: ", " " + numberOfItems);
+                    activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(getString(R.string.styles_offered));
 
-
-                } else if (numberOfItems > 1) {
-
-                    activityDetailsScrollingBinding.contentDetails.txtStyleLabel.setText(String.format("%d Styles offered", numberOfItems));
-                    Log.i("More than single: ", " " + numberOfItems);
 
                 }
-                Log.i("onDataChange: ", " " + numberOfItems);
 
             }
 
@@ -118,6 +112,8 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
 
         loadStyleItems();
+
+
     }
 
     private void loadStyleItems() {
@@ -127,7 +123,6 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
         //querying the database BY NAME
         Query query = databaseReference.orderByChild("price");
-
 
 
         FirebaseRecyclerOptions<StylesItemModel> options =
@@ -157,10 +152,27 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+
+    }
+
+    @Override
+    public boolean onNavigateUp() {
+        onBackPressed();
+        return super.onNavigateUp();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

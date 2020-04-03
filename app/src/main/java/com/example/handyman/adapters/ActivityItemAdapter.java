@@ -37,6 +37,8 @@ public class ActivityItemAdapter extends FirebaseRecyclerAdapter<StylesItemModel
                                     int i, @NonNull StylesItemModel itemModel) {
 
         activityItemAdapterViewHolder.activityItemsBinding.setItems(itemModel);
+        // activityItemAdapterViewHolder.activityItemsBinding.txtTime.setText(GetDateTime.DateToTimeFormat(itemModel.timeStamp));
+        // activityItemAdapterViewHolder.activityItemsBinding.txtPubDate.setText(GetDateTime.DateToTimeFormat(itemModel.timeStamp));
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(DisplayViewUI.getRandomDrawableColor());
@@ -49,6 +51,11 @@ public class ActivityItemAdapter extends FirebaseRecyclerAdapter<StylesItemModel
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        if (isFirstResource) {
+                            activityItemAdapterViewHolder.activityItemsBinding.progressBar.setVisibility(View.INVISIBLE);
+
+                        }
                         activityItemAdapterViewHolder.activityItemsBinding.progressBar.setVisibility(View.VISIBLE);
 
                         return false;
