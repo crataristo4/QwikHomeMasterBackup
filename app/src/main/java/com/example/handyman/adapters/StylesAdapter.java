@@ -23,14 +23,15 @@ import com.example.handyman.R;
 import com.example.handyman.databinding.LayoutStylesListItemBinding;
 import com.example.handyman.models.StylesItemModel;
 import com.example.handyman.utils.DisplayViewUI;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
+import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
+import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
 
-public class StylesAdapter extends FirebaseRecyclerAdapter<StylesItemModel, StylesAdapter.StylesViewHolder> {
+public class StylesAdapter extends FirebaseRecyclerPagingAdapter<StylesItemModel, StylesAdapter.StylesViewHolder> {
     private static onItemClickListener onItemClickListener;
 
-    public StylesAdapter(@NonNull FirebaseRecyclerOptions<StylesItemModel> options) {
+    public StylesAdapter(@NonNull DatabasePagingOptions<StylesItemModel> options) {
         super(options);
     }
 
@@ -82,6 +83,17 @@ public class StylesAdapter extends FirebaseRecyclerAdapter<StylesItemModel, Styl
 
     }
 
+    @Override
+    protected void onLoadingStateChanged(@NonNull LoadingState loadingState) {
+        switch (loadingState) {
+            case LOADING_INITIAL:
+            case LOADING_MORE:
+
+                break;
+        }
+
+    }
+
     public void setOnItemClickListener(onItemClickListener onItemClickListener) {
         StylesAdapter.onItemClickListener = onItemClickListener;
 
@@ -91,11 +103,11 @@ public class StylesAdapter extends FirebaseRecyclerAdapter<StylesItemModel, Styl
         void onClick(View view, int position);
     }
 
-    static class StylesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class StylesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        LayoutStylesListItemBinding layoutStylesListItemBinding;
+        public LayoutStylesListItemBinding layoutStylesListItemBinding;
 
-        StylesViewHolder(@NonNull LayoutStylesListItemBinding layoutStylesListItemBinding) {
+        public StylesViewHolder(@NonNull LayoutStylesListItemBinding layoutStylesListItemBinding) {
             super(layoutStylesListItemBinding.getRoot());
             this.layoutStylesListItemBinding = layoutStylesListItemBinding;
             layoutStylesListItemBinding.getRoot().setOnClickListener(this);

@@ -4,26 +4,27 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
-import com.example.handyman.activities.home.bottomsheets.SendRequestBottomSheet;
 import com.example.handyman.adapters.StylesAdapter;
 import com.example.handyman.databinding.ActivityDetailsScrollingBinding;
+import com.example.handyman.databinding.LayoutStylesListItemBinding;
 import com.example.handyman.models.StylesItemModel;
-import com.example.handyman.utils.MyConstants;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
+import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
+import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
 
 import java.util.Objects;
 
@@ -39,7 +43,8 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
     private ActivityDetailsScrollingBinding activityDetailsScrollingBinding;
     private DatabaseReference databaseReference;
-    private StylesAdapter adapter;
+    // private StylesAdapter adapter;
+    FirebaseRecyclerPagingAdapter<StylesItemModel, StylesAdapter.StylesViewHolder> adapter;
     private String name, about, image, userId;
     int numberOfItems = 0;
     private static final String TAG = "DetailsActivity";
@@ -64,14 +69,6 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
         mBottomSheetBehavior = BottomSheetBehavior.from(activityDetailsScrollingBinding.nestedScroll);
 
-        //set bottom sheet state hidden when app bar is expanded
-        activityDetailsScrollingBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-
-                // TODO: 09-Apr-20 set bottom sheet state hidden when app bar is expanded
-            }
-        });
 
 
 
@@ -151,13 +148,28 @@ public class DetailsScrollingActivity extends AppCompatActivity {
         //querying the database BY NAME
         Query query = databaseReference.orderByChild("price").limitToFirst(3);
 
+
         // TODO: 09-Apr-20 load more items on refresh and on recycler view scrolled to bottom
+
+
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(1)
+                .setPageSize(3)
+                .build();
+
+        DatabasePagingOptions<StylesItemModel> databasePagingOptions = new DatabasePagingOptions.Builder<StylesItemModel>()
+                .setLifecycleOwner(this)
+                .setQuery(databaseReference, config, StylesItemModel.class)
+                .build();
+
+
 
         FirebaseRecyclerOptions<StylesItemModel> options =
                 new FirebaseRecyclerOptions.Builder<StylesItemModel>().setQuery(query,
                         StylesItemModel.class)
                         .build();
-        adapter = new StylesAdapter(options);
+        adapter = new StylesAdapter(databasePagingOptions);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
@@ -168,11 +180,11 @@ public class DetailsScrollingActivity extends AppCompatActivity {
 
         }
 
-        //on item click
+        /*//on item click
         adapter.setOnItemClickListener((view, position) -> {
-            String price = String.valueOf(adapter.getItem(position).price);
-            String itemStyleName = adapter.getItem(position).styleItem;
-            String imageItem = adapter.getItem(position).itemImage;
+            String price = String.valueOf(adapter.getRef(position).child("price"));
+            String itemStyleName = adapter.getRef(position).child("styleItem").toString();
+            String imageItem = adapter.getRef(position).child("itemImage").toString();
 
             //scroll app bar to state collapsed when item is clicked
             activityDetailsScrollingBinding.appBar.setExpanded(false, true);
@@ -198,20 +210,79 @@ public class DetailsScrollingActivity extends AppCompatActivity {
             // activityDetailsScrollingBinding.requestLayout.txtPrice.setText(String.format("GH %s", price));
 
             // activityDetailsScrollingBinding.requestLayout.txtStyleName.setText(itemStyleName);
-/*
+*//*
 
             Glide.with(DetailsScrollingActivity.this)
                     .load(imageItem)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(activityDetailsScrollingBinding.requestLayout.imgItemPhoto);
 
-*/
+*//*
 
         });
+*/
 
+        adapter = new FirebaseRecyclerPagingAdapter<StylesItemModel, StylesAdapter.StylesViewHolder>(databasePagingOptions) {
+            @Override
+            protected void onBindViewHolder(@NonNull StylesAdapter.StylesViewHolder stylesViewHolder, int i, @NonNull StylesItemModel itemModel) {
+
+                stylesViewHolder.layoutStylesListItemBinding.setItem(itemModel);
+            }
+
+            @Override
+            protected void onLoadingStateChanged(@NonNull LoadingState loadingState) {
+
+                switch (loadingState) {
+                    case LOADING_INITIAL:
+                    case LOADING_MORE:
+                        // Do your loading animation
+                        activityDetailsScrollingBinding.contentDetails.swipeRefresh.setRefreshing(true);
+                        break;
+
+                    case LOADED:
+                    case FINISHED:
+                        //Reached end of Data set
+                        // Stop Animation
+                        activityDetailsScrollingBinding.contentDetails.swipeRefresh.setRefreshing(false);
+                        break;
+
+                    case ERROR:
+                        retry();
+                        break;
+                }
+
+
+            }
+
+
+            @Override
+            protected void onError(@NonNull DatabaseError databaseError) {
+                super.onError(databaseError);
+                activityDetailsScrollingBinding.contentDetails.swipeRefresh.setRefreshing(false);
+                databaseError.toException().printStackTrace();
+            }
+
+            @NonNull
+            @Override
+            public StylesAdapter.StylesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                LayoutStylesListItemBinding layoutStylesListItemBinding =
+                        DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
+                                R.layout.layout_styles_list_item, viewGroup, false);
+
+                return new StylesAdapter.StylesViewHolder(layoutStylesListItemBinding);
+            }
+        };
 
 
         recyclerView.setAdapter(adapter);
+
+        activityDetailsScrollingBinding.contentDetails.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                adapter.refresh();
+            }
+        });
 
     }
 

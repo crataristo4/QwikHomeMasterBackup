@@ -6,12 +6,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="true"
         android:fadeScrollbars="true"
-        android:fillViewport="true"
-        android:fitsSystemWindows="true"
-        android:focusableInTouchMode="true"
-        android:isScrollContainer="true">
+        android:fillViewport="true">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,7 +81,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:background="@drawable/curvebotton"
                 android:includeFontPadding="true"
                 android:padding="@dimen/eightDp"
@@ -156,10 +151,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
-                android:layout_marginRight="32dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/curvebotton"
                 android:text="@string/request"
@@ -168,7 +161,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dateInputLayout"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.6" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
