@@ -59,5 +59,18 @@
             app:layout_anchorGravity="bottom|end"
             app:srcCompat="@drawable/ic_call" />
 
+        <ScrollView
+            android:id="@+id/nestedScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:behavior_peekHeight="0dp"
+            app:layout_behavior="@string/bottom_sheet_behavior">
+
+            <include
+                android:id="@+id/requestLayout"
+                layout="@layout/layout_send_request" />
+
+        </ScrollView>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

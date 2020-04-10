@@ -218,4 +218,8 @@
     <string name="noStyles">No styles offered</string>
     <string name="requests">Requests</string>
     <string name="styles">Styles</string>
+    <string name="state_reason_for_request">State reason for request</string>
+    <string name="select_start_date">Select start date</string>
+    <string name="request">Request</string>
+    <string name="start_date">Start date</string>
 </resources>

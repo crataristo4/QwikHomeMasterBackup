@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -15,10 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
+import com.example.handyman.activities.home.bottomsheets.SendRequestBottomSheet;
 import com.example.handyman.adapters.StylesAdapter;
 import com.example.handyman.databinding.ActivityDetailsScrollingBinding;
 import com.example.handyman.models.StylesItemModel;
+import com.example.handyman.utils.MyConstants;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,15 +43,37 @@ public class DetailsScrollingActivity extends AppCompatActivity {
     private String name, about, image, userId;
     int numberOfItems = 0;
     private static final String TAG = "DetailsActivity";
+    BottomSheetBehavior mBottomSheetBehavior;
+    private long mLastClickTime = 0;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onCreate(savedInstanceState);
+
+
         activityDetailsScrollingBinding = DataBindingUtil.setContentView(this, R.layout.activity_details_scrolling);
+
 
         setSupportActionBar(activityDetailsScrollingBinding.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(activityDetailsScrollingBinding.nestedScroll);
+
+        //set bottom sheet state hidden when app bar is expanded
+        activityDetailsScrollingBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+
+                // TODO: 09-Apr-20 set bottom sheet state hidden when app bar is expanded
+            }
+        });
+
+
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -100,7 +128,6 @@ public class DetailsScrollingActivity extends AppCompatActivity {
             }
         });
 
-
         activityDetailsScrollingBinding.collapsingToolBar.setTitle(name);
         activityDetailsScrollingBinding.contentDetails.txtAbout.setText(about);
         //activityDetailsScrollingBinding.userImage.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_in));
@@ -122,8 +149,9 @@ public class DetailsScrollingActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         //querying the database BY NAME
-        Query query = databaseReference.orderByChild("price");
+        Query query = databaseReference.orderByChild("price").limitToFirst(3);
 
+        // TODO: 09-Apr-20 load more items on refresh and on recycler view scrolled to bottom
 
         FirebaseRecyclerOptions<StylesItemModel> options =
                 new FirebaseRecyclerOptions.Builder<StylesItemModel>().setQuery(query,
@@ -139,6 +167,48 @@ public class DetailsScrollingActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         }
+
+        //on item click
+        adapter.setOnItemClickListener((view, position) -> {
+            String price = String.valueOf(adapter.getItem(position).price);
+            String itemStyleName = adapter.getItem(position).styleItem;
+            String imageItem = adapter.getItem(position).itemImage;
+
+            //scroll app bar to state collapsed when item is clicked
+            activityDetailsScrollingBinding.appBar.setExpanded(false, true);
+
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+
+            mLastClickTime = SystemClock.elapsedRealtime();
+
+            Bundle bundle = new Bundle();
+            bundle.putString(MyConstants.PRICE, price);
+            bundle.putString(MyConstants.STYLE, itemStyleName);
+            bundle.putString(MyConstants.IMAGE_URL, imageItem);
+
+            SendRequestBottomSheet sendRequestBottomSheet = new SendRequestBottomSheet();
+            sendRequestBottomSheet.setArguments(bundle);
+            sendRequestBottomSheet.show(getSupportFragmentManager(), "sendRequest");
+
+
+            // mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            //display details into the bottom sheet
+            // activityDetailsScrollingBinding.requestLayout.txtPrice.setText(String.format("GH %s", price));
+
+            // activityDetailsScrollingBinding.requestLayout.txtStyleName.setText(itemStyleName);
+/*
+
+            Glide.with(DetailsScrollingActivity.this)
+                    .load(imageItem)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(activityDetailsScrollingBinding.requestLayout.imgItemPhoto);
+
+*/
+
+        });
+
 
 
         recyclerView.setAdapter(adapter);

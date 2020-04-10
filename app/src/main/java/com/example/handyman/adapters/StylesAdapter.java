@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 
 public class StylesAdapter extends FirebaseRecyclerAdapter<StylesItemModel, StylesAdapter.StylesViewHolder> {
+    private static onItemClickListener onItemClickListener;
 
     public StylesAdapter(@NonNull FirebaseRecyclerOptions<StylesItemModel> options) {
         super(options);
@@ -74,16 +76,35 @@ public class StylesAdapter extends FirebaseRecyclerAdapter<StylesItemModel, Styl
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(stylesViewHolder.layoutStylesListItemBinding.imgStylePhoto);
 
+        stylesViewHolder.layoutStylesListItemBinding.mCardViewItem.startAnimation(AnimationUtils.loadAnimation(stylesViewHolder.layoutStylesListItemBinding.getRoot().getContext()
+                , R.anim.fade_scale_animation));
+
+
     }
 
+    public void setOnItemClickListener(onItemClickListener onItemClickListener) {
+        StylesAdapter.onItemClickListener = onItemClickListener;
 
-    class StylesViewHolder extends RecyclerView.ViewHolder {
+    }
+
+    public interface onItemClickListener {
+        void onClick(View view, int position);
+    }
+
+    static class StylesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         LayoutStylesListItemBinding layoutStylesListItemBinding;
 
         StylesViewHolder(@NonNull LayoutStylesListItemBinding layoutStylesListItemBinding) {
             super(layoutStylesListItemBinding.getRoot());
             this.layoutStylesListItemBinding = layoutStylesListItemBinding;
+            layoutStylesListItemBinding.getRoot().setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onItemClickListener.onClick(layoutStylesListItemBinding.getRoot(), getAdapterPosition());
+
         }
     }
 }

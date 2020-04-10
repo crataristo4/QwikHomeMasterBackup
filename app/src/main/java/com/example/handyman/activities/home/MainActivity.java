@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
 
         setUpAppBarConfig();
         //step 9
-        getLastLocation();
+        // getLastLocation();
 
         //load add
         loadAdds();
@@ -425,6 +425,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater menuInflater = getMenuInflater();
 
         menuInflater.inflate(R.menu.main_settings, menu);
@@ -460,7 +461,6 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
-
         return true;
     }
 
@@ -469,10 +469,15 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_activities, R.id.navigation_home,
                 R.id.navigation_styles, R.id.navigation_request)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(activityMainBinding.bottomNavigationView, navController);
 
+        activityMainBinding.bottomNavigationView.setOnNavigationItemReselectedListener(menuItem -> {
+            //do nothing
+        });
     }
 
 

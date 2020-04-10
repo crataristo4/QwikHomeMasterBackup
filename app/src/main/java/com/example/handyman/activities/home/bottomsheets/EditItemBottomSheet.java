@@ -117,7 +117,6 @@ public class EditItemBottomSheet extends BottomSheetDialogFragment {
 
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
             if (!about.trim().isEmpty()) {
-                layoutEditItemBottomSheetBinding.progressBarLoading.setVisibility(View.VISIBLE);
 
                 updateItem.put("about", about);
                 MainActivity.serviceAccountDbRef.updateChildren(updateItem);
@@ -140,7 +139,6 @@ public class EditItemBottomSheet extends BottomSheetDialogFragment {
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
             if (!name.trim().isEmpty()) {
 
-                layoutEditItemBottomSheetBinding.progressBarLoading.setVisibility(View.VISIBLE);
 
                 updateItem.put("name", name);
                 MainActivity.serviceAccountDbRef.updateChildren(updateItem);
