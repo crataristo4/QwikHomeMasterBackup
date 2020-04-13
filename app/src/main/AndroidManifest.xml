@@ -7,8 +7,7 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--TARGET ANDROID O-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- TARGET ANDROID O -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -31,20 +30,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".activities.home.serviceTypes.TestPaginatioinActivity"></activity>
         <activity
             android:name=".activities.home.serviceTypes.DetailsScrollingActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation"
-            android:parentActivityName=".activities.home.MainActivity"
             android:label="@string/title_activity_details_scrolling"
+            android:parentActivityName=".activities.home.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".activities.home.serviceTypes.DetailsActivity" />
         <activity android:name=".activities.home.about.ProfileActivity" />
         <activity
             android:name=".activities.home.about.SettingsActivity"
-            android:parentActivityName=".activities.home.MainActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".activities.home.MainActivity" />
         <activity
             android:name=".activities.home.serviceTypes.AllBarbersActivity"
             android:parentActivityName=".activities.home.MainActivity" />

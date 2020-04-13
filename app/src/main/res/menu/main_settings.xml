@@ -13,6 +13,12 @@
         android:title="@string/addStyle"
         app:showAsAction="never" />
 
+    <!--<item
+        android:id="@+id/action_viewAllStyles"
+        android:title="@string/allStyles"
+        app:showAsAction="never" />-->
+
+
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="3"

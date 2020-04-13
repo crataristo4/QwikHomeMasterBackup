@@ -59,7 +59,13 @@ public class AllBarbersAdapter extends FirebaseRecyclerAdapter<ServicePerson,
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        if (isFirstResource) {
+                            allBarbersViewHolder.listItemsServicesBinding.pbLoading.setVisibility(View.INVISIBLE);
+
+                        }
                         allBarbersViewHolder.listItemsServicesBinding.pbLoading.setVisibility(View.VISIBLE);
+
 
                         return false;
                     }

@@ -457,6 +457,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
 
+            /*case R.id.action_viewAllStyles:
+                startActivity(new Intent(MainActivity.this, TestPaginatioinActivity.class));
+                */
+
             default:
                 return super.onOptionsItemSelected(item);
 

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +23,6 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,7 +104,7 @@ public class AccountFragment extends Fragment {
         //querying the database BY NAME
         Query query = databaseReference.orderByChild("price");
 
-        PagedList.Config config = new PagedList.Config.Builder()
+  /*      PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPrefetchDistance(10)
                 .setPageSize(3)
@@ -116,7 +114,7 @@ public class AccountFragment extends Fragment {
                 .setLifecycleOwner(this)
                 .setQuery(query, config, StylesItemModel.class)
                 .build();
-
+*/
 
         FirebaseRecyclerOptions<StylesItemModel> options =
                 new FirebaseRecyclerOptions.Builder<StylesItemModel>().setQuery(query,
@@ -132,7 +130,7 @@ public class AccountFragment extends Fragment {
         }
 
 
-        adapter = new StylesAdapter(databasePagingOptions);
+        adapter = new StylesAdapter(options);
         rv.setAdapter(adapter);
 
 

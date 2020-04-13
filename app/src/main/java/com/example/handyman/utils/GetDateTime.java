@@ -16,13 +16,13 @@ public class GetDateTime {
 
         switch (day % 10) {
             case 1:
-                return new SimpleDateFormat("EEE MMMM d'st', yyyy '\" \\u2022 \"' hh:mm aa", Locale.US).format(date);
+                return new SimpleDateFormat("EEE MMMM d'st', yyyy ' @ ' hh:mm aa", Locale.getDefault()).format(date);
             case 2:
-                return new SimpleDateFormat("EEE MMMM d'nd', yyyy '\" \\u2022 \"' hh:mm aa", Locale.US).format(date);
+                return new SimpleDateFormat("EEE MMMM d'nd', yyyy ' @ ' hh:mm aa", Locale.getDefault()).format(date);
             case 3:
-                return new SimpleDateFormat("EEE MMMM d'rd', yyyy '\" \\u2022 \"' hh:mm aa", Locale.US).format(date);
+                return new SimpleDateFormat("EEE MMMM d'rd', yyyy ' @ ' hh:mm aa", Locale.getDefault()).format(date);
             default:
-                return new SimpleDateFormat("EEE MMMM d'th', yyyy '\" \\u2022 \"' hh:mm aa", Locale.US).format(date);
+                return new SimpleDateFormat("EEE MMMM d'th', yyyy ' @ ' hh:mm aa", Locale.getDefault()).format(date);
         }
 
     }

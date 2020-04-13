@@ -23,15 +23,14 @@ import com.example.handyman.R;
 import com.example.handyman.databinding.LayoutStylesListItemBinding;
 import com.example.handyman.models.StylesItemModel;
 import com.example.handyman.utils.DisplayViewUI;
-import com.shreyaspatil.firebase.recyclerpagination.DatabasePagingOptions;
-import com.shreyaspatil.firebase.recyclerpagination.FirebaseRecyclerPagingAdapter;
-import com.shreyaspatil.firebase.recyclerpagination.LoadingState;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 
-public class StylesAdapter extends FirebaseRecyclerPagingAdapter<StylesItemModel, StylesAdapter.StylesViewHolder> {
+public class StylesAdapter extends FirebaseRecyclerAdapter<StylesItemModel, StylesAdapter.StylesViewHolder> {
     private static onItemClickListener onItemClickListener;
 
-    public StylesAdapter(@NonNull DatabasePagingOptions<StylesItemModel> options) {
+    public StylesAdapter(@NonNull FirebaseRecyclerOptions<StylesItemModel> options) {
         super(options);
     }
 
@@ -63,6 +62,11 @@ public class StylesAdapter extends FirebaseRecyclerPagingAdapter<StylesItemModel
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        if (isFirstResource) {
+                            stylesViewHolder.layoutStylesListItemBinding.progressBar.setVisibility(View.INVISIBLE);
+
+                        }
                         stylesViewHolder.layoutStylesListItemBinding.progressBar.setVisibility(View.VISIBLE);
 
                         return false;
@@ -83,16 +87,6 @@ public class StylesAdapter extends FirebaseRecyclerPagingAdapter<StylesItemModel
 
     }
 
-    @Override
-    protected void onLoadingStateChanged(@NonNull LoadingState loadingState) {
-        switch (loadingState) {
-            case LOADING_INITIAL:
-            case LOADING_MORE:
-
-                break;
-        }
-
-    }
 
     public void setOnItemClickListener(onItemClickListener onItemClickListener) {
         StylesAdapter.onItemClickListener = onItemClickListener;
