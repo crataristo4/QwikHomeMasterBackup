@@ -241,48 +241,62 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-                    <TextView
-                        android:id="@+id/txtPaymentStatus"
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/linearLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="@string/payment_status"
-                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical"
+                        android:padding="@dimen/eightDp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+                        app:layout_constraintTop_toBottomOf="@+id/divider2"
+                        app:layout_constraintVertical_bias="0.0">
 
-                    <Button
-                        android:id="@+id/btnConfirmPayment"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@drawable/curvebotton"
-                        android:text="@string/confirm_payment"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/txtPaymentStatus" />
+
+                        <TextView
+                            android:id="@+id/txtPaymentStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:text="@string/payment_status"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btnConfirmPayment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginRight="16dp"
+                            android:background="@drawable/curvebotton"
+                            android:text="@string/confirm_payment"
+                            android:textColor="@color/white" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                     <View
                         android:id="@+id/divider6"
                         android:layout_width="0dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="24dp"
-                        android:layout_marginBottom="32dp"
+                        android:layout_marginBottom="8dp"
                         android:background="?android:attr/listDivider"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btnConfirmPayment"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
                         app:layout_constraintVertical_bias="0.0" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.home.serviceTypes.TestPaginatioinActivity"></activity>
+        <activity android:name=".activities.home.serviceTypes.TestAcceptOrRejectActivity"></activity>
+        <activity android:name=".activities.home.serviceTypes.TestPaginatioinActivity" />
         <activity
             android:name=".activities.home.serviceTypes.DetailsScrollingActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation"

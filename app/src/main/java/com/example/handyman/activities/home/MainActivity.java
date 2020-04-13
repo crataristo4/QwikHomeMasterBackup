@@ -35,10 +35,10 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.handyman.R;
-import com.example.handyman.activities.handymanactivity.RequestHandyManActivity;
 import com.example.handyman.activities.home.about.AboutActivity;
 import com.example.handyman.activities.home.about.JobTypesActivity;
 import com.example.handyman.activities.home.about.SettingsActivity;
+import com.example.handyman.activities.home.serviceTypes.TestAcceptOrRejectActivity;
 import com.example.handyman.activities.welcome.SplashScreenActivity;
 import com.example.handyman.databinding.ActivityMainBinding;
 import com.example.handyman.utils.DisplayViewUI;
@@ -463,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
                 */
 
             case R.id.action_viewAllRequests:
-                startActivity(new Intent(MainActivity.this, RequestHandyManActivity.class));
+                startActivity(new Intent(MainActivity.this, TestAcceptOrRejectActivity.class));
 
 
             default:

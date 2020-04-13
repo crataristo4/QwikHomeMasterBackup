@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, CustomerRequestSent.HandyManRequest> {
     private Intent intent;
+    FragmentManager fragmentManager;
 
     /**
      * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
@@ -43,11 +45,16 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
     @Override
     protected void onBindViewHolder(@NonNull final HandyManRequest holder, int position,
                                     @NonNull final ServicePerson model) {
+
         holder.showName(model.getSenderName());
         holder.showUserPhoto(model.getSenderPhoto());
-        holder.showResponse(model.getResponse());
-        holder.showDate(model.getDateRequested());
-        holder.showRating(model.getRating());
+        // holder.showResponse(model.getResponse());
+        // holder.showDate(model.getDateRequested());
+        // holder.showRating(model.getRating());
+
+
+
+
 
         final String getAdapterPosition = getRef(position).getKey();
 
