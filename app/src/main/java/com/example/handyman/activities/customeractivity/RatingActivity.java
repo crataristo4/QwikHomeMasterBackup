@@ -40,8 +40,8 @@ public class RatingActivity extends AppCompatActivity {
         if (getRatingIntent != null) {
 
             getPosition = getRatingIntent.getStringExtra("position");
-            getHandyName = getRatingIntent.getStringExtra("handyManName");
-            getHandyManPhoto = getRatingIntent.getStringExtra("handyManPhoto");
+            getHandyName = getRatingIntent.getStringExtra("servicePersonName");
+            getHandyManPhoto = getRatingIntent.getStringExtra("servicePersonPhoto");
 
             TextView txtRateHandyMan = findViewById(R.id.txtRateUser);
             CircleImageView photo = findViewById(R.id.rateHandyPhoto);

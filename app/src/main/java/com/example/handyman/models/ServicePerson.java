@@ -39,8 +39,10 @@ public class ServicePerson extends BaseObservable {
     public String distanceBetween;
     public String senderPhoto;
     public String senderName;
-    public String handyManName;
-    public String handyManPhoto;
+    public String servicePersonName;
+    public String servicePersonPhoto;
+    public String dateRequested;
+
 
 
     public ServicePerson() {
@@ -214,21 +216,21 @@ public class ServicePerson extends BaseObservable {
         return senderName;
     }
 
-    public void setHandyManName(String handyManName) {
-        this.handyManName = handyManName;
+    public String getServicePersonPhoto() {
+        return servicePersonPhoto;
     }
 
-    public String getHandyManPhoto() {
-        return handyManPhoto;
-    }
-
-    public void setHandyManPhoto(String handyManPhoto) {
-        this.handyManPhoto = handyManPhoto;
+    public void setServicePersonPhoto(String servicePersonPhoto) {
+        this.servicePersonPhoto = servicePersonPhoto;
     }
 
     @Bindable
-    public String getHandyManName() {
-        return handyManName;
+    public String getServicePersonName() {
+        return servicePersonName;
+    }
+
+    public void setServicePersonName(String servicePersonName) {
+        this.servicePersonName = servicePersonName;
     }
 
     @Bindable
@@ -247,6 +249,14 @@ public class ServicePerson extends BaseObservable {
 
     public void setStyleItem(String styleItem) {
         this.styleItem = styleItem;
+    }
+
+    public String getDateRequested() {
+        return dateRequested;
+    }
+
+    public void setDateRequested(String dateRequested) {
+        this.dateRequested = dateRequested;
     }
 
     @BindingAdapter("imageUrl")

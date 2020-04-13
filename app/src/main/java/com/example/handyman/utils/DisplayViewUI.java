@@ -56,7 +56,7 @@ public class DisplayViewUI {
         builder.setCancelable(false);
         if (btnPos != null) builder.setPositiveButton(btnPos, onClickListener);
         if (btnNeg != null) builder.setNegativeButton(btnNeg, onClickListener);
-        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setIcon(context.getResources().getDrawable(R.drawable.applogo));
         builder.show();
     }
 

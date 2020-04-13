@@ -43,10 +43,10 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
     @Override
     protected void onBindViewHolder(@NonNull final HandyManRequest holder, int position,
                                     @NonNull final ServicePerson model) {
-        holder.showName(model.getHandyManName());
-        holder.showUserPhoto(model.getHandyManPhoto());
+        holder.showName(model.getSenderName());
+        holder.showUserPhoto(model.getSenderPhoto());
         holder.showResponse(model.getResponse());
-        holder.showDate(model.getDate());
+        holder.showDate(model.getDateRequested());
         holder.showRating(model.getRating());
 
         final String getAdapterPosition = getRef(position).getKey();
@@ -55,7 +55,7 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
             if (model.getRating() == 0.0) {
                 new AlertDialog.Builder(v.getContext())
                         .setIcon(v.getResources().getDrawable(R.drawable.request))
-                        .setTitle("Your request to " + model.getHandyManName())
+                        .setTitle("Your request to " + model.getServicePersonName())
                         .setMessage(model.getReason())
                         .setPositiveButton("ok", (dialog, which) -> dialog.dismiss()).create().show();
 
@@ -63,9 +63,9 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
 
                 new AlertDialog.Builder(v.getContext())
                         .setIcon(v.getResources().getDrawable(R.drawable.request))
-                        .setTitle("Your request to " + model.getHandyManName())
+                        .setTitle("Your request to " + model.getServicePersonName())
                         .setMessage(model.getReason() + "\n\n\n" +
-                                "You rated " + model.getHandyManName() + " "
+                                "You rated " + model.getServicePersonName() + " "
                                 + model.getRating() + " stars on the work done")
                         .setPositiveButton("ok", (dialog, which) -> dialog.dismiss()).create().show();
             }
@@ -75,8 +75,8 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
         holder.btnChat.setOnClickListener(v -> {
             intent = new Intent(v.getContext(), ChatActivity.class);
             intent.putExtra("position", getAdapterPosition);
-            intent.putExtra("photo", model.getHandyManPhoto());
-            intent.putExtra("name", model.getHandyManName());
+            intent.putExtra("photo", model.getServicePersonPhoto());
+            intent.putExtra("name", model.getServicePersonName());
             intent.putExtra("content", model.getReason());
             intent.putExtra("senderName", model.getSenderName());
             intent.putExtra("senderPhoto", model.getSenderPhoto());
@@ -95,16 +95,16 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
 
                     new AlertDialog.Builder(view.getContext())
                             .setIcon(view.getResources().getDrawable(R.drawable.handshake))
-                            .setTitle("Rate " + model.getHandyManName())
-                            .setMessage("Would you like to rate " + model.getHandyManName() + " to "
+                            .setTitle("Rate " + model.getServicePersonName())
+                            .setMessage("Would you like to rate " + model.getServicePersonName() + " to "
                                     + "improve working  experience?")
                             .setPositiveButton("Yes", (dialog12, which12) -> {
                                 dialog12.dismiss();
 
                                 intent = new Intent(view.getContext(), RatingActivity.class);
                                 intent.putExtra("position", getAdapterPosition);
-                                intent.putExtra("handyManPhoto", model.getHandyManPhoto());
-                                intent.putExtra("handyManName", model.getHandyManName());
+                                intent.putExtra("servicePersonPhoto", model.getServicePersonPhoto());
+                                intent.putExtra("servicePersonName", model.getServicePersonName());
                                 view.getContext().startActivity(intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
 

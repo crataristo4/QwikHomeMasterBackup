@@ -111,7 +111,7 @@ public class RequestHandyManActivity extends AppCompatActivity implements View.O
         }
 
 
-        Query query = mRequests.orderByChild("senderUserId").equalTo(uid);
+        Query query = mRequests.orderByChild("senderId").equalTo(uid);
 
 
         FirebaseRecyclerOptions<ServicePerson> options = new FirebaseRecyclerOptions.Builder<ServicePerson>().
@@ -178,7 +178,7 @@ public class RequestHandyManActivity extends AppCompatActivity implements View.O
         intent = getIntent();
         txtName = findViewById(R.id.txtHandyManName);
         txtOccupation = findViewById(R.id.handyManOccupation);
-        mPhoto = findViewById(R.id.handyManPhoto);
+        mPhoto = findViewById(R.id.servicePersonPhoto);
         loading = new ProgressDialog(this);
         edtAbt = findViewById(R.id.edtAbt);
         txtDate = findViewById(R.id.edtDate);
@@ -360,8 +360,8 @@ public class RequestHandyManActivity extends AppCompatActivity implements View.O
                 requestSent.put("senderPhoto", ownerPhoto);
 
                 requestSent.put("handyManId", getHandyManId);
-                requestSent.put("handyManName", getName);
-                requestSent.put("handyManPhoto", getPhoto);
+                requestSent.put("servicePersonName", getName);
+                requestSent.put("servicePersonPhoto", getPhoto);
 
                 requestSent.put("date", datePosted);
                 requestSent.put("reason", getReason);

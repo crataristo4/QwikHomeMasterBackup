@@ -139,12 +139,12 @@ public class SendRequestBottomSheet extends BottomSheetDialogFragment {
 
 
         SimpleDateFormat sfd = new SimpleDateFormat("EEE dd-MM-yyyy '@' hh:mm aa",
-                Locale.getDefault());
+                Locale.US);
 
         try {
             Calendar calendar = Calendar.getInstance();
             Date today = calendar.getTime();
-            dateRequested = sfd.format(today.toString());
+            dateRequested = sfd.format(new Date(today.toString()));
 
         } catch (Exception e) {
             e.printStackTrace();

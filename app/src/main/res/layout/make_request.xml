@@ -6,7 +6,7 @@
     android:background="@color/white">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/handyManPhoto"
+        android:id="@+id/servicePersonPhoto"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
@@ -25,8 +25,8 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/handyManPhoto"
-        app:layout_constraintTop_toTopOf="@+id/handyManPhoto" />
+        app:layout_constraintStart_toEndOf="@+id/servicePersonPhoto"
+        app:layout_constraintTop_toTopOf="@+id/servicePersonPhoto" />
 
     <TextView
         android:id="@+id/handyManOccupation"

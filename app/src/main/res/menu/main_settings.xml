@@ -18,6 +18,11 @@
         android:title="@string/allStyles"
         app:showAsAction="never" />-->
 
+    <item
+        android:id="@+id/action_viewAllRequests"
+        android:title="@string/request"
+        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/action_logout"
