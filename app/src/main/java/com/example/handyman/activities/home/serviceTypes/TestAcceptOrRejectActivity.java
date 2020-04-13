@@ -12,8 +12,6 @@ import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.adapters.TestAcceptAdatapter;
 import com.example.handyman.models.RequestModel;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -30,16 +28,9 @@ public class TestAcceptOrRejectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_accept_or_reject);
 
-
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
-        assert firebaseUser != null;
-        String uid = firebaseUser.getUid();
-
         databaseReference = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("Styles").child(uid);
+                .child("Requests");
         databaseReference.keepSynced(true);
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -61,8 +52,19 @@ public class TestAcceptOrRejectActivity extends AppCompatActivity {
         FirebaseRecyclerOptions<RequestModel> options = new FirebaseRecyclerOptions.Builder<RequestModel>().
                 setQuery(query, RequestModel.class).build();
         customerRequestSent = new TestAcceptAdatapter(options, getSupportFragmentManager());
-        customerRequestSent.notifyDataSetChanged();
         recyclerView.setAdapter(customerRequestSent);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        customerRequestSent.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        customerRequestSent.stopListening();
     }
 }

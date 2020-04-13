@@ -82,6 +82,7 @@ public class RequestAdapter extends FirebaseRecyclerAdapter<RequestModel, Reques
             btnRateServicePerson = layoutUserRequestSentBinding.btnRateServicePerson;
             txtResponse = layoutUserRequestSentBinding.txtResponse;
             btnView = layoutUserRequestSentBinding.btnView;
+            btnChat = layoutUserRequestSentBinding.btnChat;
             txtPaymentStatus = layoutUserRequestSentBinding.txtPaymentStatus;
             linearLayoutCompat = layoutUserRequestSentBinding.linearLayout;
             btnConfirmPayment = layoutUserRequestSentBinding.btnConfirmPayment;

@@ -1,5 +1,6 @@
 package com.example.handyman.adapters;
 
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +13,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.handyman.R;
+import com.example.handyman.activities.home.bottomsheets.AcceptOrRejectBtSheet;
 import com.example.handyman.models.RequestModel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TestAcceptAdatapter extends FirebaseRecyclerAdapter<RequestModel, TestAcceptAdatapter.TestAcceptAdatapterViewHolder> {
     FragmentManager fragmentManager;
@@ -39,6 +40,18 @@ public class TestAcceptAdatapter extends FirebaseRecyclerAdapter<RequestModel, T
         testAcceptAdatapterViewHolder.showUserPhoto(requestModel.getSenderPhoto());
 
         final String getAdapterPosition = getRef(i).getKey();
+        testAcceptAdatapterViewHolder.btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AcceptOrRejectBtSheet acceptOrRejectBtSheet = new AcceptOrRejectBtSheet();
+                Bundle bundle = new Bundle();
+                bundle.putString("position", getAdapterPosition);
+                bundle.putString("name", requestModel.getSenderName());
+                bundle.putString("photo", requestModel.getSenderPhoto());
+                acceptOrRejectBtSheet.setArguments(bundle);
+                acceptOrRejectBtSheet.show(fragmentManager, "show");
+            }
+        });
 
 
     }
@@ -82,7 +95,7 @@ public class TestAcceptAdatapter extends FirebaseRecyclerAdapter<RequestModel, T
 
         //display the user photo
         void showUserPhoto(String urlOfImage) {
-            CircleImageView profile = view.findViewById(R.id.imgItemPhoto);
+            AppCompatImageView profile = view.findViewById(R.id.imgItemPhoto);
 
             Glide.with(view).load(urlOfImage).into(profile);
         }
