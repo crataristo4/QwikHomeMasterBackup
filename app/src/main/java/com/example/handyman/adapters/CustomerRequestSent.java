@@ -166,7 +166,7 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
 
         //display the user photo
         void showUserPhoto(String urlOfImage) {
-            CircleImageView profile = view.findViewById(R.id.imgUserPhotooo);
+            CircleImageView profile = view.findViewById(R.id.imgItemPhoto);
 
             Glide.with(view).load(urlOfImage).into(profile);
         }
@@ -174,7 +174,7 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
 
         //display the Name
         void showName(String s) {
-            TextView name = view.findViewById(R.id.txtYou);
+            TextView name = view.findViewById(R.id.txtServicePersonName);
             name.setText(s);
         }
 
@@ -193,7 +193,7 @@ public class CustomerRequestSent extends FirebaseRecyclerAdapter<ServicePerson, 
 
         //display the details
         void showResponse(String s) {
-            TextView loc = view.findViewById(R.id.txtResultsHandyMan);
+            TextView loc = view.findViewById(R.id.txtResponse);
             //customer can only chat , rate and view the route only when their request are accepted
             if (s.equals("Request Accepted")) {
                 btnRateHandyMan.setVisibility(View.VISIBLE);

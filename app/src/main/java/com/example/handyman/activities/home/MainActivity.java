@@ -66,8 +66,8 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String IS_DIALOG_SHOWN = "dialogShown";
-    public static final String PREFS = "PREFS";
+
+
     private static final String TAG = "MainActivity";
     public static String serviceType, name, imageUrl, about, uid;
     private static FirebaseUser firebaseUser;
@@ -396,8 +396,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkDisplayAlertDialog() {
-        SharedPreferences pref = getSharedPreferences(PREFS, 0);
-        boolean alertShown = pref.getBoolean(IS_DIALOG_SHOWN, false);
+        SharedPreferences pref = getSharedPreferences(MyConstants.PREFS, 0);
+        boolean alertShown = pref.getBoolean(MyConstants.IS_DIALOG_SHOWN, false);
 
         if (!alertShown) {
             new Handler().postDelayed(() -> DisplayViewUI.displayAlertDialogMsg(this,
@@ -413,7 +413,7 @@ public class MainActivity extends AppCompatActivity {
                     }), 15000);
 
             SharedPreferences.Editor edit = pref.edit();
-            edit.putBoolean(IS_DIALOG_SHOWN, true);
+            edit.putBoolean(MyConstants.IS_DIALOG_SHOWN, true);
             edit.apply();
         }
     }

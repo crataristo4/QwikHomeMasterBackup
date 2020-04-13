@@ -1,63 +1,124 @@
 package com.example.handyman.activities.home.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.handyman.R;
+import com.example.handyman.activities.home.MainActivity;
+import com.example.handyman.adapters.RequestAdapter;
+import com.example.handyman.databinding.FragmentRequestBinding;
+import com.example.handyman.models.RequestModel;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 
 public class RequestFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private FragmentRequestBinding fragmentRequestBinding;
+    private RequestAdapter requestAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private DatabaseReference requestDbRef;
+    private RecyclerView recyclerView;
 
     public RequestFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RequestFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RequestFragment newInstance(String param1, String param2) {
-        RequestFragment fragment = new RequestFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_request, container, false);
+        fragmentRequestBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_request, container, false);
+        return fragmentRequestBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        intViews();
+    }
+
+    private void intViews() {
+        recyclerView = fragmentRequestBinding.rvRequests;
+        swipeRefreshLayout = fragmentRequestBinding.swipeRefresh;
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        requestDbRef = FirebaseDatabase.getInstance().getReference("Requests");
+        requestDbRef.keepSynced(true);
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.amber, R.color.fb,
+                R.color.colorAccent, R.color.colorAsh, R.color.colorOrange);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
+
+            // TODO: 12-Apr-20 refresh data on refreshing
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
+
+        }, 3000));
+
+
+        loadData();
+
+
+    }
+
+    private void loadData() {
+
+        String uid = MainActivity.uid;
+
+        Query query = requestDbRef.orderByChild("senderId").equalTo(uid);
+
+
+        FirebaseRecyclerOptions<RequestModel> options = new FirebaseRecyclerOptions.Builder<RequestModel>().
+                setQuery(query, RequestModel.class).build();
+        requestAdapter = new RequestAdapter(options);
+        requestAdapter.notifyDataSetChanged();
+
+        swipeRefreshLayout.setRefreshing(true);
+        new Handler().postDelayed(() -> {
+
+            swipeRefreshLayout.setRefreshing(false);
+            recyclerView.setAdapter(requestAdapter);
+
+
+        }, 3000);
+
+
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        requestAdapter.startListening();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        requestAdapter.stopListening();
+    }
 }

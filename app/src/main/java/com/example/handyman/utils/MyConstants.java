@@ -2,6 +2,7 @@ package com.example.handyman.utils;
 
 public final class MyConstants {
     public static final String PREFS = "prefs";
+    public static final String IS_DIALOG_SHOWN = "dialogShown";
     public static String ACCOUNT_TYPE = "accountType";
     public static final String PROFILE_FRAGMENT_TAG = "profileFrag";
     public static final String SERVICES = "Services";
