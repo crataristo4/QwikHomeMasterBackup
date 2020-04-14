@@ -192,7 +192,7 @@ public class DetailsScrollingActivity extends AppCompatActivity {
             bundle.putString(MyConstants.IMAGE_URL, imageItem);
 
             //pass details of service person to bottom sheet
-            bundle.putString(MyConstants.SERVICR_PERSON_NAME, name);
+            bundle.putString(MyConstants.SERVICE_PERSON_NAME, name);
 
             //pass users name , user photo , user id to bundle
             String userName = MainActivity.name;

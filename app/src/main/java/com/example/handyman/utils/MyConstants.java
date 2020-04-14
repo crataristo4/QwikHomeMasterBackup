@@ -10,7 +10,7 @@ public final class MyConstants {
     public static final String WOMEN_HAIR_STYLIST = "Women Hairstylists";
     public static final String INTERIOR_DERCORATOR = "Interior Decorators";
     public static String NAME = "name";
-    public static String SERVICR_PERSON_NAME = "servicePersonName";
+    public static final String PHONE_NUMBER = "phoneNumber";
     public static String ABOUT = "about";
     public static String IMAGE_URL = "imageUrl";
     public static String UID = "uid";
@@ -19,4 +19,8 @@ public final class MyConstants {
     public static String STYLE = "style";
     public static String PRICE = "price";
     public static int REQUEST_CODE = 100;
+    public static final String HASH_TYPE = "SHA-256";
+    public static final int NUM_HASHED_BYTES = 9;
+    public static final int NUM_BASE64_CHAR = 11;
+    public static String SERVICE_PERSON_NAME = "servicePersonName";
 }

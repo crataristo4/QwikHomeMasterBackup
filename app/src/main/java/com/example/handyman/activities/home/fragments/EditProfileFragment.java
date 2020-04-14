@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.handyman.R;
 import com.example.handyman.activities.home.MainActivity;
 import com.example.handyman.activities.home.bottomsheets.EditItemBottomSheet;
+import com.example.handyman.activities.home.bottomsheets.VerifyPhoneBottomSheet;
 import com.example.handyman.databinding.FragmentEditProfileBinding;
 import com.example.handyman.utils.DisplayViewUI;
 import com.example.handyman.utils.MyConstants;
@@ -48,7 +49,7 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle("Profile");
+        Objects.requireNonNull(getActivity()).setTitle("Profile");
         // Inflate the layout for this fragment
         fragmentEditProfileBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_profile, container, false);
         return fragmentEditProfileBinding.getRoot();
@@ -90,17 +91,21 @@ public class EditProfileFragment extends Fragment {
                 //open bottom sheet to edit about
                 this::onClick);
 
+
+        fragmentEditProfileBinding.editPhoneLayout.setOnClickListener(this::onClick);
+
     }
 
     private void openGallery() {
         CropImage.activity()
                 .setAspectRatio(16, 16)
-                .start(getActivity());
+                .start(Objects.requireNonNull(getActivity()));
     }
 
     public void onClick(View v) {
         Bundle bundle = new Bundle();
         EditItemBottomSheet editItemBottomSheet = new EditItemBottomSheet();
+        VerifyPhoneBottomSheet verifyPhoneBottomSheet = new VerifyPhoneBottomSheet();
 
         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
             return;
@@ -115,7 +120,7 @@ public class EditProfileFragment extends Fragment {
                 String getName = String.valueOf(fragmentEditProfileBinding.txtUserName.getText());
                 bundle.putString(MyConstants.NAME, getName);
                 editItemBottomSheet.setArguments(bundle);
-                editItemBottomSheet.show(getFragmentManager(), MyConstants.NAME);
+                editItemBottomSheet.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), MyConstants.NAME);
 
             }
 
@@ -125,7 +130,13 @@ public class EditProfileFragment extends Fragment {
             String getAbout = String.valueOf(fragmentEditProfileBinding.txtAboutUser.getText());
             bundle.putString(MyConstants.ABOUT, getAbout);
             editItemBottomSheet.setArguments(bundle);
-            editItemBottomSheet.show(getFragmentManager(), MyConstants.ABOUT);
+            editItemBottomSheet.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), MyConstants.ABOUT);
+        } else if (v.getId() == R.id.editPhoneLayout) {
+            //open phone number verification
+            //Objects.requireNonNull(getActivity()).startActivity(new Intent(getContext(), AddPhoneNumberActivity.class));
+
+            verifyPhoneBottomSheet.setCancelable(false);
+            verifyPhoneBottomSheet.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), MyConstants.PHONE_NUMBER);
         }
     }
 

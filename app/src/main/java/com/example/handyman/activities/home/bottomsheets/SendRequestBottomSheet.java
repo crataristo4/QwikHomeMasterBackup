@@ -87,7 +87,7 @@ public class SendRequestBottomSheet extends BottomSheetDialogFragment {
             itemName = bundle.getString(MyConstants.STYLE);
             itemPrice = bundle.getString(MyConstants.PRICE);
             itemImage = bundle.getString(MyConstants.IMAGE_URL);
-            servicePersonName = bundle.getString(MyConstants.SERVICR_PERSON_NAME);
+            servicePersonName = bundle.getString(MyConstants.SERVICE_PERSON_NAME);
             userName = bundle.getString(MyConstants.NAME);
             uid = bundle.getString(MyConstants.UID);
             userPhotoUrl = bundle.getString(MyConstants.USER_IMAGE_URL);
